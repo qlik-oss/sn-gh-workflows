@@ -1,0 +1,37 @@
+name: Code coverage baseline
+on:
+  workflow_call:
+    inputs:
+      package-manager:
+        required: false
+        type: string
+        default: "yarn"
+      test-script:
+        required: false
+        type: string
+        default: "yarn test"
+
+jobs:
+  code-coverage-baseline:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: qlik-oss/sn-gh-workflows/actions/setup@v1
+      with:
+        cache: ${{ inputs.package-manager }}
+
+    - name: Cache baseline code coverage
+      id: cache
+      uses: actions/cache@v3
+      with:
+        path: report-baseline.json
+        key: baseline-coverage
+
+    - name: 'Test'
+      uses: ArtiomTr/jest-coverage-report-action@v2
+      with:
+        package-manager: ${{ inputs.package-manager }}
+        test-script: ${{ inputs.test-script }}
+
+    - name: Store main code coverage
+      run: cat report.json > report-baseline.json

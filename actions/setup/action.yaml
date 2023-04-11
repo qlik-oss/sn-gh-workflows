@@ -1,0 +1,24 @@
+name: "Setup npm"
+description: "Setup npm environment"
+author: "johan.enell@qlik.com"
+
+inputs:
+  cache:
+    description: "Used to specify a package manager for caching in the default directory. Supported values: npm, yarn, pnpm."
+    required: false
+    default: "yarn"
+
+runs:
+  using: composite
+
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: "18"
+        cache: ${{ inputs.cache }}
