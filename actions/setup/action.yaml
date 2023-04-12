@@ -1,4 +1,4 @@
-name: "Setup npm"
+name: "Setup environment"
 description: "Setup npm environment"
 author: "johan.enell@qlik.com"
 

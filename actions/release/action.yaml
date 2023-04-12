@@ -1,0 +1,11 @@
+name: "Setup environment"
+description: "Setup npm environment"
+author: "johan.enell@qlik.com"
+
+runs:
+  using: composite
+
+  steps:
+    - name: Install dependencies
+      shell: bash
+      run: npx semantic-release --dry-run --debug

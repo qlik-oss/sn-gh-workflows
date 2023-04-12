@@ -32,3 +32,5 @@ jobs:
 
     - name: Build
       run: yarn build
+
+    - uses: qlik-oss/sn-gh-workflows/actions/release@v1
