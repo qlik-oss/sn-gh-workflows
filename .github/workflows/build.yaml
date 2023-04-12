@@ -1,26 +1,34 @@
-name: Code coverage baseline
+name: Build
 on:
   workflow_call:
 
 jobs:
-  code-coverage-baseline:
+  checks:
     runs-on: ubuntu-latest
 
     steps:
     - uses: qlik-oss/sn-gh-workflows/actions/setup@v1
 
-    - name: Cache baseline code coverage
-      id: cache
+    - name: ESLint
+      run: yarn lint
+
+    - name: Typescript
+      run: yarn tsc --noEmit
+
+    - name: Restore baseline code coverage
+      id: baseline-code-coverage
       uses: actions/cache@v3
       with:
         path: report-baseline.json
         key: baseline-coverage
 
     - name: 'Test'
+      if: steps.baseline-code-coverage.outputs.cache-hit == 'true'
       uses: ArtiomTr/jest-coverage-report-action@v2
       with:
         package-manager: yarn
         test-script: yarn test:unit
+        base-coverage-file: report-baseline.json
 
-    - name: Store main code coverage
-      run: cat report.json > report-baseline.json
+    - name: Build
+      run: yarn build
