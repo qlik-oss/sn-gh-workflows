@@ -23,7 +23,7 @@ jobs:
 
     - name: Restore baseline code coverage
       id: baseline-code-coverage
-      uses: actions/cache@v3
+      uses: actions/cache/restore@v3
       with:
         path: report-baseline.json
         key: baseline-coverage
