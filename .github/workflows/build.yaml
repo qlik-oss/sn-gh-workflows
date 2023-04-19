@@ -43,3 +43,6 @@ jobs:
       uses: qlik-oss/sn-gh-workflows/actions/release@v1
       with:
         release: ${{ inputs.release }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
