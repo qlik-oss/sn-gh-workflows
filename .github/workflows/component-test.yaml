@@ -1,0 +1,62 @@
+name: Run component tests
+
+on:
+  workflow_call:
+
+jobs:
+  validate:
+    name: ${{ matrix.project }} ${{ matrix.test }} Tests
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+
+    strategy:
+      fail-fast: true
+      matrix:
+        project: [chromium, webkit]
+        test: ["test:rendering", "test:integration"]
+        include:
+          - project: chromium
+            os: ubuntu-latest
+            cache_dir: ~/.cache/ms-playwright
+
+          - project: webkit
+            os: macos-latest
+            cache_dir: ~/Library/Caches/ms-playwright
+
+          - test: test:rendering
+            reports-path: test/rendering/reports/
+
+          - test: test:integration
+            reports-path: test/integration/reports/
+
+    steps:
+      - name: Setup workspace
+        uses: qlik-oss/sn-gh-workflows/actions/setup@v1
+
+      - name: Build
+        run: yarn build
+
+      - name: Get Playwright version
+        id: playwright-version
+        run: echo "version=$(yarn -s run playwright --version | base64)" >> $GITHUB_OUTPUT
+
+      - name: Cache playwright binaries
+        uses: actions/cache@v3
+        id: playwright-cache
+        with:
+          path: ${{ matrix.cache_dir }}
+          key: ${{ runner.os }}-${{ matrix.project }}-pw-${{ steps.playwright-version.outputs.version }}
+
+      - name: Install ${{ matrix.project }} with Playwright
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps ${{ matrix.project }}
+
+      - name: Playwright ${{ matrix.test }}
+        run: yarn ${{ matrix.test }} --project=${{ matrix.project }}
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: "${{ matrix.test }}-output"
+          path: ${{ matrix.reports-path }}
+          retention-days: 3
