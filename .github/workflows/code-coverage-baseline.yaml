@@ -23,4 +23,4 @@ jobs:
       uses: actions/cache/save@v3
       with:
         path: report-baseline.json
-        key: baseline-coverage
+        key: baseline-coverage-${{ github.sha }}
