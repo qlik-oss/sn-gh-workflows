@@ -8,8 +8,12 @@ on:
         type: boolean
 
 jobs:
-  checks:
+  build_release:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: write
 
     steps:
     - name: Setup workspace
@@ -41,7 +45,6 @@ jobs:
 
     - name: Build ext
       run: yarn sense
-
 
     - name: Semantic Release
       uses: cycjimmy/semantic-release-action@v3
