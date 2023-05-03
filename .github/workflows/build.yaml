@@ -39,10 +39,21 @@ jobs:
     - name: Build
       run: yarn build
 
-    - name: Release
-      uses: qlik-oss/sn-gh-workflows/actions/release@v1
-      with:
-        release: ${{ inputs.release }}
+    - name: Build ext
+      run: yarn sense
+
+
+    - name: Semantic Release
+      uses: cycjimmy/semantic-release-action@v3
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        dry_run: ${{ !inputs.release }}
+
+    - name: Upload extension artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ github.event.repository.name }}-ext
+        path: '*-ext/**/*'
+        retention-days: 7
