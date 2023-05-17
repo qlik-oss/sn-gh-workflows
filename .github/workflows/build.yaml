@@ -25,21 +25,13 @@ jobs:
     - name: Typescript
       run: yarn tsc --noEmit
 
-    - name: Restore baseline code coverage
-      id: baseline-code-coverage
-      uses: actions/cache/restore@v3
+    - name: Run unit tests
+      uses: paambaati/codeclimate-action@v4.0.0
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       with:
-        path: report-baseline.json
-        key: baseline-coverage-${{ github.sha }}
-        restore-keys: baseline-coverage-
-
-    - name: 'Test'
-      if: steps.baseline-code-coverage.outputs.cache-hit == 'true'
-      uses: ArtiomTr/jest-coverage-report-action@v2
-      with:
-        package-manager: yarn
-        test-script: yarn test:unit
-        base-coverage-file: report-baseline.json
+        coverageLocations: ${{github.workspace}}/coverage/lcov.info:lcov
+        coverageCommand: yarn test:unit --ci --coverage --reporters="github-actions" --reporters="summary"
 
     - name: Build
       run: yarn build
