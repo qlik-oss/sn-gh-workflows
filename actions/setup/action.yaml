@@ -2,6 +2,11 @@ name: "Setup environment"
 description: "Setup npm environment"
 author: "johan.enell@qlik.com"
 
+inputs:
+  GH_ACCESS_TOKEN:
+    description: 'Token for accessing private repos'
+    required: false
+
 runs:
   using: composite
 
@@ -16,6 +21,13 @@ runs:
       with:
         node-version: 18
         cache: yarn
+
+    - name: Authenticate with private NPM package
+      if: inputs.GH_ACCESS_TOKEN != null
+      shell: bash
+      run: |
+        npm set @qlik-trial:registry https://npm.pkg.github.com/
+        npm set "//npm.pkg.github.com/:_authToken=${{ inputs.GH_ACCESS_TOKEN }}"
 
     - name: Install dependencies
       shell: bash

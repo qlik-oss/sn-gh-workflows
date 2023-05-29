@@ -16,40 +16,42 @@ jobs:
       contents: write
 
     steps:
-    - name: Setup workspace
-      uses: qlik-oss/sn-gh-workflows/actions/setup@v1
+      - name: Setup workspace
+        uses: qlik-oss/sn-gh-workflows/actions/setup@v1
+        with:
+          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
 
-    - name: ESLint
-      run: yarn lint
+      - name: ESLint
+        run: yarn lint
 
-    - name: Typescript
-      run: yarn tsc --noEmit
+      - name: Typescript
+        run: yarn tsc --noEmit
 
-    - name: Run unit tests
-      uses: paambaati/codeclimate-action@v4.0.0
-      env:
-        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-      with:
-        coverageLocations: ${{github.workspace}}/coverage/lcov.info:lcov
-        coverageCommand: yarn test:unit --ci --coverage --reporters="github-actions" --reporters="summary"
+      - name: Run unit tests
+        uses: paambaati/codeclimate-action@v4.0.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageLocations: ${{github.workspace}}/coverage/lcov.info:lcov
+          coverageCommand: yarn test:unit --ci --coverage --reporters="github-actions" --reporters="summary"
 
-    - name: Build
-      run: yarn build
+      - name: Build
+        run: yarn build
 
-    - name: Build ext
-      run: yarn sense
+      - name: Build ext
+        run: yarn sense
 
-    - name: Semantic Release
-      uses: cycjimmy/semantic-release-action@v3
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        dry_run: ${{ !inputs.release }}
+      - name: Semantic Release
+        uses: cycjimmy/semantic-release-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          dry_run: ${{ !inputs.release }}
 
-    - name: Upload extension artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ github.event.repository.name }}-ext
-        path: '*-ext/**/*'
-        retention-days: 7
+      - name: Upload extension artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.event.repository.name }}-ext
+          path: "*-ext/**/*"
+          retention-days: 7
