@@ -34,7 +34,7 @@ runs:
       run: |
         set -eo pipefail
         # Amend auth token for access to public npm registry for @nebula.js packages
-        echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+        echo "//registry.npmjs.org/:_authToken=${{ inputs.NPM_TOKEN }}" >> ~/.npmrc
     - name: Install dependencies
       shell: bash
       run: yarn install --immutable
