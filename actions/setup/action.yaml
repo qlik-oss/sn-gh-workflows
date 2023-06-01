@@ -6,6 +6,9 @@ inputs:
   GH_ACCESS_TOKEN:
     description: "Token for accessing private repos"
     required: false
+  NPM_TOKEN:
+    description: "Token for accessing npm registry"
+    required: false
 
 runs:
   using: composite
@@ -30,6 +33,7 @@ runs:
         npm set "//npm.pkg.github.com/:_authToken=${{ inputs.GH_ACCESS_TOKEN }}"
 
     - name: Authenticate with nebula npm package
+      if: inputs.NPM_TOKEN != null
       shell: bash
       run: |
         set -eo pipefail
