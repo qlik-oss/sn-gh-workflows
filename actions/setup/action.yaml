@@ -25,20 +25,19 @@ runs:
         node-version: 18
         cache: yarn
 
-    - name: Authenticate with private NPM package
+    - name: Setup access to qlik-trial registry
       if: inputs.GH_ACCESS_TOKEN != null
       shell: bash
       run: |
-        npm set @qlik-trial:registry https://npm.pkg.github.com/
-        npm set "//npm.pkg.github.com/:_authToken=${{ inputs.GH_ACCESS_TOKEN }}"
+        npm config set @qlik-trial:registry https://npm.pkg.github.com/
+        npm config set "//npm.pkg.github.com/:_authToken=${{ inputs.GH_ACCESS_TOKEN }}"
 
-    - name: Authenticate with nebula npm package
+    - name: Setup authentication to npm js
       if: inputs.NPM_TOKEN != null
       shell: bash
       run: |
-        set -eo pipefail
-        # Amend auth token for access to public npm registry for @nebula.js packages
-        echo "//registry.npmjs.org/:_authToken=${{ inputs.NPM_TOKEN }}" >> ~/.npmrc
+        npm config set "//registry.npmjs.org/:_authToken=${{ inputs.NPM_TOKEN }}"
+
     - name: Install dependencies
       shell: bash
       run: yarn install --immutable
