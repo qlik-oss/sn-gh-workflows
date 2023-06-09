@@ -6,6 +6,9 @@ on:
       release:
         required: true
         type: boolean
+      branches:
+        required: false
+        type: string
 
 jobs:
   build_release:
@@ -49,6 +52,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         with:
           dry_run: ${{ !inputs.release }}
+          branches: ${{ inputs.branches }}
 
       - name: Upload extension artifact
         uses: actions/upload-artifact@v3
