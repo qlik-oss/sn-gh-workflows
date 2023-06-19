@@ -28,6 +28,9 @@ jobs:
       - name: ESLint
         run: yarn lint
 
+      - name: Prettier
+        run: yarn format:check
+
       - name: Typescript
         run: yarn tsc --noEmit
 
