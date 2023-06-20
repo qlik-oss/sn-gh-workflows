@@ -25,17 +25,36 @@ jobs:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Read package.json
+        uses: actions/github-script@v6
+        id: package
+        with:
+          script: |
+            try {
+              const fs = require('fs')
+              const jsonString = fs.readFileSync('./package.json')
+              var package = JSON.parse(jsonString)
+              return Object.keys(package.scripts)
+            } catch(err) {
+              core.error("Error while reading or parsing the JSON")
+              core.setFailed(err)
+            }
+
       - name: ESLint
+        if: contains(fromJSON(steps.package.outputs.result), 'lint')
         run: yarn lint
 
       - name: Prettier
+        if: contains(fromJSON(steps.package.outputs.result), 'format:check')
         run: yarn format:check
 
       - name: Typescript
+        if: contains(fromJSON(steps.package.outputs.result), 'types:check')
         run: yarn types:check
 
       - name: Run unit tests
         uses: paambaati/codeclimate-action@v4.0.0
+        if: contains(fromJSON(steps.package.outputs.result), 'test:unit')
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
@@ -43,9 +62,11 @@ jobs:
           coverageCommand: yarn test:unit --ci --coverage --reporters="github-actions" --reporters="summary"
 
       - name: Build
+        if: contains(fromJSON(steps.package.outputs.result), 'build' )
         run: yarn build
 
       - name: Build ext
+        if: contains(fromJSON(steps.package.outputs.result), 'sense')
         run: yarn sense
 
       - name: Semantic Release
