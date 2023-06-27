@@ -20,10 +20,11 @@ jobs:
 
     steps:
       - name: Setup workspace
-        uses: qlik-oss/sn-gh-workflows/actions/setup@v1
+        uses: ./github/actions/setup/
         with:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
 
       - name: Read package.json
         uses: actions/github-script@v6

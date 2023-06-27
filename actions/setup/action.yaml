@@ -9,6 +9,9 @@ inputs:
   NPM_TOKEN:
     description: "Token for accessing npm registry"
     required: false
+  NPMRC_ENCODED:
+    description: "BASE64 encoded .npmrc file"
+    required: false
 
 runs:
   using: composite
@@ -25,18 +28,30 @@ runs:
         node-version: 18
         cache: yarn
 
-    - name: Setup access to qlik-trial registry
+    - name: Setup .npmrc
+      if: inputs.NPMRC_ENCODED != null
+      shell: bash
+      env:
+        NPMRC_ENCODED: inputs.GH_ACCESS_TOKEN
+      run: |
+        echo $NPMRC_ENCODED | base64 -d >> ./.npmrc
+
+    - name: Setup npm access to qlik-trial registry
       if: inputs.GH_ACCESS_TOKEN != null
       shell: bash
+      env:
+        GH_ACCESS_TOKEN: inputs.GH_ACCESS_TOKEN
       run: |
         npm config set @qlik-trial:registry https://npm.pkg.github.com/
-        npm config set "//npm.pkg.github.com/:_authToken=${{ inputs.GH_ACCESS_TOKEN }}"
+        npm config set "//npm.pkg.github.com/:_authToken=$GH_ACCESS_TOKEN"
 
-    - name: Setup authentication to npm js
+    - name: Setup npm access to npmjs registry
       if: inputs.NPM_TOKEN != null
       shell: bash
+      env:
+        NPM_TOKEN: inputs.NPM_TOKEN
       run: |
-        npm config set "//registry.npmjs.org/:_authToken=${{ inputs.NPM_TOKEN }}"
+        npm config set "//registry.npmjs.org/:_authToken=$NPM_TOKEN"
 
     - name: Install dependencies
       shell: bash
