@@ -32,7 +32,7 @@ runs:
       if: inputs.NPMRC_ENCODED != null
       shell: bash
       env:
-        NPMRC_ENCODED: inputs.GH_ACCESS_TOKEN
+        NPMRC_ENCODED: ${{ inputs.NPMRC_ENCODED }}
       run: |
         echo $NPMRC_ENCODED | base64 -d >> ./.npmrc
 
