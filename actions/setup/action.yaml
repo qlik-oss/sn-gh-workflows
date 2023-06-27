@@ -34,7 +34,7 @@ runs:
       env:
         NPMRC_ENCODED: ${{ inputs.NPMRC_ENCODED }}
       run: |
-        echo $NPMRC_ENCODED | base64 -d >> ./.npmrc
+        echo $NPMRC_ENCODED | base64 -d >> ~/.npmrc
 
     - name: Setup npm access to qlik-trial registry
       if: inputs.GH_ACCESS_TOKEN != null
