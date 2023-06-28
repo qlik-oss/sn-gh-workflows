@@ -34,24 +34,20 @@ runs:
       env:
         NPMRC_ENCODED: ${{ inputs.NPMRC_ENCODED }}
       run: |
-        echo $NPMRC_ENCODED | base64 -d >> ~/.npmrc
+        echo ${{ inputs.NPMRC_ENCODED }} | base64 -d >> ~/.npmrc
 
     - name: Setup npm access to qlik-trial registry
       if: inputs.GH_ACCESS_TOKEN != null
       shell: bash
-      env:
-        GH_ACCESS_TOKEN: inputs.GH_ACCESS_TOKEN
       run: |
         npm config set @qlik-trial:registry https://npm.pkg.github.com/
-        npm config set "//npm.pkg.github.com/:_authToken=$GH_ACCESS_TOKEN"
+        npm config set "//npm.pkg.github.com/:_authToken=${{ inputs.GH_ACCESS_TOKEN }}"
 
     - name: Setup npm access to npmjs registry
       if: inputs.NPM_TOKEN != null
       shell: bash
-      env:
-        NPM_TOKEN: inputs.NPM_TOKEN
       run: |
-        npm config set "//registry.npmjs.org/:_authToken=$NPM_TOKEN"
+        npm config set "//registry.npmjs.org/:_authToken=${{ inputs.NPM_TOKEN }}"
 
     - name: Install dependencies
       shell: bash
