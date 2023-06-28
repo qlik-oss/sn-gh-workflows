@@ -73,15 +73,23 @@ jobs:
           yarn test:e2e
 
       - name: Upload results Playwright tests
-        if: contains(fromJSON(steps.package.outputs.result), 'test:e2e' )
+        if: success() || failure()
         uses: actions/upload-artifact@v3
         with:
           name: playwright-report
           path: ./test/rendering/test-report
+          if-no-files-found: ignore
 
       - name: Build ext
         if: contains(fromJSON(steps.package.outputs.result), 'sense')
         run: yarn sense
+
+      - name: Upload extension artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.event.repository.name }}-ext
+          path: "*-ext/**/*"
+          retention-days: 7
 
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v3
@@ -91,10 +99,3 @@ jobs:
         with:
           dry_run: ${{ !inputs.release }}
           branches: ${{ inputs.release_branches }}
-
-      - name: Upload extension artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ github.event.repository.name }}-ext
-          path: "*-ext/**/*"
-          retention-days: 7
