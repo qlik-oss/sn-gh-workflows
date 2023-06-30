@@ -1,8 +1,11 @@
 # sn-gh-workflows
-A collection of [GitHub actions reusable workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) that can be used by a supernova component. 
+
+A collection of [GitHub actions reusable workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) that can be used by a supernova component.
 
 ## Setup
+
 To use this workflow in a repo add this workflow
+
 ```yaml
 name: Build
 on:
@@ -28,7 +31,11 @@ jobs:
     with:
       release: ${{ inputs.release || false}}
 ```
+
 This will trigger a build for pull requests to main, every new commit on main and manually by the user.
 
+In order to upload unit test results to codeclimate you will need to add the test reporter id for your repository as a secret: `CC_TEST_REPORTER_ID`
+
 ### Trigger a release
-This workflow uses [semantic-release](https://github.com/semantic-release/semantic-release) to fully automate version management and package publishing. To trigger a release, manually run the workflow on a release branch and set release to true. 
+
+This workflow uses [semantic-release](https://github.com/semantic-release/semantic-release) to fully automate version management and package publishing. To trigger a release, manually run the workflow on a release branch and set release to true.
