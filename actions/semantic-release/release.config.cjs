@@ -12,16 +12,16 @@ const config = {
     "@semantic-release/npm",
     "@semantic-release/github",
     [
+      "@semantic-release/git",
+      {
+        assets: assets,
+      },
+    ],
+    [
       "@semantic-release/exec",
       {
         prepareCmd:
           "$GITHUB_ACTION_PATH/api-compliance.sh ${nextRelease.version}",
-      },
-    ],
-    [
-      "@semantic-release/git",
-      {
-        assets: assets,
       },
     ],
   ],
