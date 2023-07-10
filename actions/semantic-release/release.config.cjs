@@ -9,19 +9,19 @@ const config = {
   plugins: [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/exec",
+      {
+        publishCmd:
+          "$GITHUB_ACTION_PATH/api-compliance.sh ${nextRelease.version}",
+      },
+    ],
     "@semantic-release/npm",
     "@semantic-release/github",
     [
       "@semantic-release/git",
       {
         assets: assets,
-      },
-    ],
-    [
-      "@semantic-release/exec",
-      {
-        publishCmd:
-          "$GITHUB_ACTION_PATH/api-compliance.sh ${nextRelease.version}",
       },
     ],
   ],
