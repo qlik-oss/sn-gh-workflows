@@ -9,6 +9,9 @@ on:
       release_branches:
         required: false
         type: string
+      api_specification_path:
+        required: false
+        type: string
 
 jobs:
   build_release:
@@ -103,15 +106,15 @@ jobs:
           path: "*-ext/**/*"
           retention-days: 7
 
-      - name: Semantic Release
-        uses: cycjimmy/semantic-release-action@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Release
+        uses: qlik-oss/sn-gh-workflows/actions/semantic-release@v1
         with:
-          dry_run: ${{ !inputs.release }}
-          branches: ${{ inputs.release_branches }}
-
-      # - name: API Governence
-      #   if: success() && inputs.release
-      #   run:
+          API_SPECIFICATION_PATH: ${{ inputs.api_specification_path }}
+          API_KEY: ${{ secrets.API_KEY }}
+          APICULTURIST_S3: ${{ secrets.APICULTURIST_S3 }}
+          APICULTURIST_GITHUB: ${{ secrets.APICULTURIST_GITHUB }}
+          APICULTURIST_TOKEN: ${{ secrets.APICULTURIST_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          release: ${{ inputs.release }}
+          release_branches: ${{ inputs.release_branches }}
