@@ -20,7 +20,7 @@ const config = {
     [
       "@semantic-release/exec",
       {
-        prepareCmd:
+        publishCmd:
           "$GITHUB_ACTION_PATH/api-compliance.sh ${nextRelease.version}",
       },
     ],
