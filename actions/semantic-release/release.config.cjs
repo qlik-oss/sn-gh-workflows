@@ -9,14 +9,15 @@ const config = {
   plugins: [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
+    "@semantic-release/npm",
     [
       "@semantic-release/exec",
       {
-        publishCmd:
+        prepareCmd: "yarn spec",
+        successCmd:
           "$GITHUB_ACTION_PATH/api-compliance.sh ${nextRelease.version}",
       },
     ],
-    "@semantic-release/npm",
     "@semantic-release/github",
     [
       "@semantic-release/git",
