@@ -44,6 +44,11 @@ runs:
         npm config set @qlik-trial:registry https://npm.pkg.github.com/
         npm config set "//npm.pkg.github.com/:_authToken=${{ inputs.GH_ACCESS_TOKEN }}"
 
+    - name: Setup npm access to qlik-oss registry
+      shell: bash
+      run: |
+        npm config set @qlik-oss:registry https://npm.pkg.github.com/
+
     - name: Setup npm access to npmjs registry
       if: inputs.NPM_TOKEN != null
       shell: bash

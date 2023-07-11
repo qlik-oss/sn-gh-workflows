@@ -27,7 +27,7 @@ jobs:
         with:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          # NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
+          NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
 
       - name: Read package.json
         uses: actions/github-script@v6
