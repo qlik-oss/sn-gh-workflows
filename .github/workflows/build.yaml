@@ -8,6 +8,14 @@ on:
         type: boolean
       release_branches:
         required: false
+        default: |
+          [
+            'main',
+            'master',
+            {name: 'beta', prerelease: true},
+            {name: 'alpha', prerelease: true},
+            '+([0-9])?(.{+([0-9]),x}).x'
+          ]
         type: string
       api_specification_path:
         required: false
