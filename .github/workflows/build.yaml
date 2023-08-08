@@ -116,6 +116,8 @@ jobs:
 
       - name: Release
         uses: qlik-oss/sn-gh-workflows/actions/semantic-release@v1
+        env:
+          HUSKY: 0
         with:
           API_SPECIFICATION_PATH: ${{ inputs.api_specification_path }}
           API_KEY: ${{ secrets.API_KEY }}
