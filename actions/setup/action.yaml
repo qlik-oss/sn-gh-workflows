@@ -57,4 +57,4 @@ runs:
 
     - name: Install dependencies
       shell: bash
-      run: yarn install --immutable
+      run: yarn install --immutable --frozen-lockfile
