@@ -34,7 +34,7 @@ jobs:
         uses: qlik-oss/sn-gh-workflows/actions/setup@v1
         with:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
           NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
 
       - name: Read package.json
