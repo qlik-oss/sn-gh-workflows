@@ -2,41 +2,67 @@
   "name": "sn-test",
   "version": "0.1.0",
   "description": "",
+  "keywords": [
+    "qlik",
+    "nebula",
+    "stardust"
+  ],
   "license": "MIT",
   "author": {
     "name": "Johan Enell",
     "email": "johan.enell@qlik.com"
   },
-  "keywords": ["qlik", "nebula", "stardust"],
-  "files": ["dist"],
-  "engines": {
-    "node": ">=18.10.0"
-  },
   "main": "dist/sn-test.js",
   "module": "dist/sn-test.esm.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "nebula build",
+    "format:check": "prettier --check '**' --ignore-unknown",
+    "format:write": "prettier --write '**' --ignore-unknown",
     "lint": "eslint src",
-    "start": "nebula serve",
     "sense": "nebula sense",
+    "start": "nebula serve",
     "test:e2e": "playwright test",
     "test:e2e:report": "playwright show-report test/integration/test-report"
+  },
+  "prettier": "@qlik/prettier-config",
+  "eslintConfig": {
+    "parserOptions": {
+      "project": [
+        "./tsconfig.json"
+      ]
+    },
+    "extends": [
+      "@qlik/eslint-config",
+      "@qlik/eslint-config/jest",
+      "@qlik/eslint-config/playwright"
+    ],
+    "root": true
+  },
+  "dependencies": {
+    "@qlik-trial/sprout": "^3.8.1"
   },
   "devDependencies": {
     "@nebula.js/cli": "4.5.0",
     "@nebula.js/cli-build": "4.5.0",
-    "@nebula.js/cli-serve": "4.5.0",
     "@nebula.js/cli-sense": "4.5.0",
+    "@nebula.js/cli-serve": "4.5.0",
     "@playwright/test": "^1.28.1",
-    "eslint": "7.27.0",
-    "eslint-config-airbnb-base": "14.2.1",
-    "eslint-plugin-import": "2.23.4",
-    "eslint-plugin-mocha": "9.0.0",
+    "@qlik/eslint-config": "^0.4.24",
+    "@qlik/prettier-config": "^0.4.1",
     "@qlik/sdk": "^0.12.0",
+    "eslint": "8.49.0",
+    "picasso-plugin-q": "2.1.1",
     "picasso.js": "2.1.1",
-    "picasso-plugin-q": "2.1.1"
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
   },
   "peerDependencies": {
     "@nebula.js/stardust": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=18.10.0"
   }
 }

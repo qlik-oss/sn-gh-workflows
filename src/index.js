@@ -1,20 +1,20 @@
 import {
-  useElement,
-  useState,
-  useStaleLayout,
-  useSelections,
-  useRect,
-  useEffect,
   useConstraints,
-} from '@nebula.js/stardust';
-import picassojs from 'picasso.js';
-import picassoQ from 'picasso-plugin-q';
+  useEffect,
+  useElement,
+  useRect,
+  useSelections,
+  useStaleLayout,
+  useState,
+} from "@nebula.js/stardust";
+import picassoQ from "picasso-plugin-q";
+import picassojs from "picasso.js";
 
-import properties from './object-properties';
-import data from './data';
-import picSelections from './pic-selections';
-import definition from './pic-definition';
-import ext from './ext';
+import data from "./data";
+import ext from "./ext";
+import properties from "./object-properties";
+import definition from "./pic-definition";
+import picSelections from "./pic-selections";
 
 /**
  * Entrypoint for your sense visualization
@@ -52,7 +52,7 @@ export default function supernova(galaxy) {
 
         const s = picSelections({
           selections,
-          brush: p.brush('selection'),
+          brush: p.brush("selection"),
           picassoQ,
         });
 
@@ -71,8 +71,8 @@ export default function supernova(galaxy) {
         instance.update({
           data: [
             {
-              type: 'q',
-              key: 'qHyperCube',
+              type: "q",
+              key: "qHyperCube",
               data: layout.qHyperCube,
             },
           ],

@@ -7,9 +7,9 @@ const properties = {
     qSuppressMissing: true,
   },
   showTitles: true,
-  title: '',
-  subtitle: '',
-  footnote: '',
+  title: "",
+  subtitle: "",
+  footnote: "",
 };
 
 export default properties;

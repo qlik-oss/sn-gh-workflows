@@ -20,6 +20,10 @@ on:
       api_specification_path:
         required: false
         type: string
+      package_manager:
+        required: true
+        type: string
+        default: yarn
 
 jobs:
   build_release:
@@ -36,6 +40,7 @@ jobs:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
           NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
+          package_manager: ${{ inputs.package_manager }}
 
       - name: Read package.json
         uses: actions/github-script@v6
@@ -54,25 +59,26 @@ jobs:
 
       - name: ESLint
         if: contains(fromJSON(steps.package.outputs.result), 'lint')
-        run: yarn lint
+        run: ${{ inputs.package_manager }} run lint
 
       - name: Prettier
         if: contains(fromJSON(steps.package.outputs.result), 'format:check')
-        run: yarn format:check
+        run: ${{ inputs.package_manager }} run format:check
 
       - name: Typescript
         if: contains(fromJSON(steps.package.outputs.result), 'types:check')
-        run: yarn types:check
+        run: ${{ inputs.package_manager }} run types:check
 
       - name: API Spec
         if: contains(fromJSON(steps.package.outputs.result), 'spec')
         run: |
-          yarn spec
+          ${{ inputs.package_manager }} run spec
           # Fail if the spec command changed any files
           if [[ -z "$(git status --porcelain)" ]];
           then
             exit 0
           else
+            echo "Your API specification has changed when running yarn spec. Make sure you commit your API spec changes, or remove unintended changes in the properties definition"
             exit 1
           fi
 
@@ -83,17 +89,17 @@ jobs:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
           coverageLocations: ${{github.workspace}}/coverage/lcov.info:lcov
-          coverageCommand: yarn test:unit --ci --coverage --reporters="github-actions" --reporters="summary"
+          coverageCommand: ${{ inputs.package_manager }} run test:unit --ci --coverage --reporters="github-actions" --reporters="summary"
 
       - name: Build
         if: contains(fromJSON(steps.package.outputs.result), 'build' )
-        run: yarn build
+        run: ${{ inputs.package_manager }} run build
 
       - name: Run Playwright tests
         if: contains(fromJSON(steps.package.outputs.result), 'test:e2e' )
         run: |
           npx playwright install
-          yarn test:e2e
+          ${{ inputs.package_manager }} run test:e2e
 
       - name: Upload results Playwright tests
         if: success() || failure()
@@ -105,7 +111,7 @@ jobs:
 
       - name: Build ext
         if: contains(fromJSON(steps.package.outputs.result), 'sense')
-        run: yarn sense
+        run: ${{ inputs.package_manager }} run sense
 
       - name: Upload extension artifact
         uses: actions/upload-artifact@v3
