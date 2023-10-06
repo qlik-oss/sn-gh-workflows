@@ -37,3 +37,4 @@ runs:
         extra_plugins: |
           @semantic-release/exec
           @semantic-release/git
+          semantic-release-lerna
