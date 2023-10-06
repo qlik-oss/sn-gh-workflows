@@ -73,6 +73,7 @@ jobs:
           then
             exit 0
           else
+            echo "Your API specification has changed when running yarn spec. Make sure you commit your API spec changes, or remove unintended changes in the properties definition"
             exit 1
           fi
 
