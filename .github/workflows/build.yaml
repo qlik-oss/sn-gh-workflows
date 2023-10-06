@@ -137,7 +137,7 @@ jobs:
 
       - name: Release monorepo
         if: ${{ inputs.monorepo }}
-        uses: qlik-oss/sn-gh-workflows/actions/semantic-release-monorepo@v1
+        uses: qlik-oss/sn-gh-workflows/actions/semantic-release-monorepo@dvr/monorepo-setup
         env:
           HUSKY: 0
         with:
