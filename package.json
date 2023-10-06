@@ -7,8 +7,14 @@
     "name": "Johan Enell",
     "email": "johan.enell@qlik.com"
   },
-  "keywords": ["qlik", "nebula", "stardust"],
-  "files": ["dist"],
+  "keywords": [
+    "qlik",
+    "nebula",
+    "stardust"
+  ],
+  "files": [
+    "dist"
+  ],
   "engines": {
     "node": ">=18.10.0"
   },
@@ -25,16 +31,17 @@
   "devDependencies": {
     "@nebula.js/cli": "4.5.0",
     "@nebula.js/cli-build": "4.5.0",
-    "@nebula.js/cli-serve": "4.5.0",
     "@nebula.js/cli-sense": "4.5.0",
+    "@nebula.js/cli-serve": "4.5.0",
     "@playwright/test": "^1.28.1",
+    "@qlik/sdk": "^0.12.0",
     "eslint": "7.27.0",
     "eslint-config-airbnb-base": "14.2.1",
     "eslint-plugin-import": "2.23.4",
     "eslint-plugin-mocha": "9.0.0",
-    "@qlik/sdk": "^0.12.0",
+    "picasso-plugin-q": "2.1.1",
     "picasso.js": "2.1.1",
-    "picasso-plugin-q": "2.1.1"
+    "semantic-release-lerna": "1.0.3"
   },
   "peerDependencies": {
     "@nebula.js/stardust": "^4.0.0"
