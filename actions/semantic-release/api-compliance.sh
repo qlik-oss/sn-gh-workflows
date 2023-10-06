@@ -1,7 +1,6 @@
 #!/bin/bash
 
-if [ -z "$API_KEY" ]
-then
+if [ -z "$API_KEY" ]; then
   echo "No API_KEY. Will skip compliance check"
   exit 0
 fi

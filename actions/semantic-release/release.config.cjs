@@ -15,14 +15,15 @@ const config = {
       {
         prepareCmd: "yarn spec",
         successCmd:
-          "$GITHUB_ACTION_PATH/api-compliance.sh ${nextRelease.version}",
+          // eslint-disable-next-line no-undef
+          `$GITHUB_ACTION_PATH/api-compliance.sh ${nextRelease.version}`,
       },
     ],
     "@semantic-release/github",
     [
       "@semantic-release/git",
       {
-        assets: assets,
+        assets,
       },
     ],
   ],

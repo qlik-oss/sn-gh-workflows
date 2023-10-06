@@ -12,6 +12,10 @@ inputs:
   NPMRC_ENCODED:
     description: "BASE64 encoded .npmrc file"
     required: false
+  package_manager:
+    description: The desired package manager to be used, [yarn, npm, pnpm, bun]
+    required: true
+    default: yarn
 
 runs:
   using: composite
@@ -22,12 +26,6 @@ runs:
       with:
         fetch-depth: 0
         persist-credentials: false
-
-    - name: Setup Node
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18
-        cache: yarn
 
     - name: Setup .npmrc
       if: inputs.NPMRC_ENCODED != null
@@ -41,13 +39,13 @@ runs:
       if: inputs.GH_ACCESS_TOKEN != null
       shell: bash
       run: |
+        npm config set @qlik-oss:registry https://npm.pkg.github.com/
         npm config set @qlik-trial:registry https://npm.pkg.github.com/
         npm config set "//npm.pkg.github.com/:_authToken=${{ inputs.GH_ACCESS_TOKEN }}"
 
-    - name: Setup npm access to qlik-oss registry
-      shell: bash
-      run: |
-        npm config set @qlik-oss:registry https://npm.pkg.github.com/
+        echo '[install.scopes]' >> ~/.bunfig.toml
+        echo 'qlik-trial = { url = "https://npm.pkg.github.com", token = "${{ inputs.GH_ACCESS_TOKEN }}" }' >> ~/.bunfig.toml
+        echo 'qlik-oss = { url = "https://npm.pkg.github.com", token = "${{ inputs.GH_ACCESS_TOKEN }}" }' >> ~/.bunfig.toml
 
     - name: Setup npm access to npmjs registry
       if: inputs.NPM_TOKEN != null
@@ -55,6 +53,44 @@ runs:
       run: |
         npm config set "//registry.npmjs.org/:_authToken=${{ inputs.NPM_TOKEN }}"
 
+    - name: Setup pnpm
+      if: inputs.package_manager == 'pnpm'
+      uses: pnpm/action-setup@v2
+      with:
+        version: latest
+
+    - name: Setup bun
+      if: inputs.package_manager == 'bun'
+      uses: oven-sh/setup-bun@v1
+
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: ${{ inputs.package_manager != 'bun' && inputs.package_manager || null }}
+
     - name: Install dependencies
       shell: bash
-      run: yarn install --immutable --frozen-lockfile
+      run: |
+        # Install dependencies
+        case ${{ inputs.package_manager }} in
+          npm)
+            npm ci
+            ;;
+
+          yarn)
+            yarn install --immutable --frozen-lockfile
+            ;;
+
+          pnpm)
+            pnpm install --frozen-lockfile
+            ;;
+
+          bun)
+            bun install --frozen-lockfile
+          ;;
+
+          *)
+            echo "unknown"
+            ;;
+        esac
