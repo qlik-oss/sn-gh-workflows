@@ -20,6 +20,10 @@ on:
       api_specification_path:
         required: false
         type: string
+      monorepo:
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   build_release:
@@ -116,6 +120,7 @@ jobs:
           retention-days: 7
 
       - name: Release
+        if: ${{ !inputs.monorepo }}
         uses: qlik-oss/sn-gh-workflows/actions/semantic-release@v1
         env:
           HUSKY: 0
@@ -125,6 +130,17 @@ jobs:
           APICULTURIST_S3: ${{ secrets.APICULTURIST_S3 }}
           APICULTURIST_GITHUB: ${{ secrets.APICULTURIST_GITHUB }}
           APICULTURIST_TOKEN: ${{ secrets.APICULTURIST_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          release: ${{ inputs.release }}
+          release_branches: ${{ inputs.release_branches }}
+
+      - name: Release monorepo
+        if: ${{ inputs.monorepo }}
+        uses: qlik-oss/sn-gh-workflows/actions/semantic-release-monorepo@v1
+        env:
+          HUSKY: 0
+        with:
           GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           release: ${{ inputs.release }}
