@@ -14,9 +14,7 @@ const config = {
       "@semantic-release/exec",
       {
         prepareCmd: "yarn spec",
-        successCmd:
-          // eslint-disable-next-line no-undef
-          `$GITHUB_ACTION_PATH/api-compliance.sh ${nextRelease.version}`,
+        successCmd: "$GITHUB_ACTION_PATH/api-compliance.sh ${nextRelease.version}",
       },
     ],
     "@semantic-release/github",
