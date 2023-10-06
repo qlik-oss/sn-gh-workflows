@@ -35,6 +35,6 @@ runs:
         dry_run: ${{ inputs.release == 'false' }}
         branches: ${{ inputs.release_branches }}
         extra_plugins: |
-          @semantic-release/exec
+          @semantic-release/changelog
           @semantic-release/git
           semantic-release-lerna
