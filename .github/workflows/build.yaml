@@ -57,6 +57,10 @@ jobs:
               core.setFailed(err)
             }
 
+      - name: Build
+        if: contains(fromJSON(steps.package.outputs.result), 'build' )
+        run: ${{ inputs.package_manager }} run build
+
       - name: ESLint
         if: contains(fromJSON(steps.package.outputs.result), 'lint')
         run: ${{ inputs.package_manager }} run lint
@@ -90,10 +94,6 @@ jobs:
         with:
           coverageLocations: ${{github.workspace}}/coverage/lcov.info:lcov
           coverageCommand: ${{ inputs.package_manager }} run test:unit --ci --coverage --reporters="github-actions" --reporters="summary"
-
-      - name: Build
-        if: contains(fromJSON(steps.package.outputs.result), 'build' )
-        run: ${{ inputs.package_manager }} run build
 
       - name: Run Playwright tests
         if: contains(fromJSON(steps.package.outputs.result), 'test:e2e' )
