@@ -21,7 +21,7 @@ on:
         required: false
         type: string
       package_manager:
-        required: true
+        required: false
         type: string
         default: yarn
 
