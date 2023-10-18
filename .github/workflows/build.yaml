@@ -137,4 +137,4 @@ jobs:
 
       - name: Release monorepo
         if: ${{ inputs.monorepo }}
-        run: $ yarn workspaces run semantic-release -e semantic-release-monorepo --branches main
+        run: yarn workspaces run semantic-release -e semantic-release-monorepo --branches main
