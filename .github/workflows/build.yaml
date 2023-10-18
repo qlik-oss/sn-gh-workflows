@@ -137,11 +137,4 @@ jobs:
 
       - name: Release monorepo
         if: ${{ inputs.monorepo }}
-        uses: qlik-oss/sn-gh-workflows/actions/semantic-release-monorepo@dvr/monorepo-setup
-        env:
-          HUSKY: 0
-        with:
-          GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          release: ${{ inputs.release }}
-          release_branches: ${{ inputs.release_branches }}
+        run: lerna publish from-package -y
