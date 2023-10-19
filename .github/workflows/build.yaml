@@ -137,4 +137,6 @@ jobs:
 
       - name: Release monorepo
         if: ${{ inputs.monorepo }}
+        env:
+          GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
         run: yarn workspaces run semantic-release -e semantic-release-monorepo --branches main
