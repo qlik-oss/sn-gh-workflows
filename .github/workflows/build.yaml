@@ -139,4 +139,4 @@ jobs:
         if: ${{ inputs.monorepo }}
         env:
           GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
-        run: lerna exec --concurrency 1 -- npx --no-install semantic-release -e semantic-release-monorepo
+        run: lerna exec --concurrency 1 -- npx --no-install semantic-release -e semantic-release-monorepo -p @semantic-release/npm
