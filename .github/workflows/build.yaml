@@ -120,7 +120,7 @@ jobs:
           retention-days: 7
 
       - name: Release
-        if: ${{ !inputs.monorepo }}
+        if: ${{ !inputs.customRelease }}
         uses: qlik-oss/sn-gh-workflows/actions/semantic-release@v1
         env:
           HUSKY: 0
