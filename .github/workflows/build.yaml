@@ -20,7 +20,7 @@ on:
       api_specification_path:
         required: false
         type: string
-      monorepo:
+      customRelease:
         required: false
         type: boolean
         default: false
@@ -136,7 +136,7 @@ jobs:
           release_branches: ${{ inputs.release_branches }}
 
       - name: Release monorepo
-        if: ${{ inputs.monorepo }}
+        if: ${{ inputs.customRelease }}
         env:
           GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
-        run: lerna exec --concurrency 1 -- npx --no-install semantic-release -e semantic-release-monorepo
+        run: yarn release
