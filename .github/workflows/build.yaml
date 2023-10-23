@@ -136,9 +136,7 @@ jobs:
           release_branches: ${{ inputs.release_branches }}
 
       - name: Initialize git user
-        run: |
-          git config --global user.email "${GITHUB_ACTOR}"
-          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+        run: git config --global url.https://${{ secrets.GH_ACCESS_TOKEN }}@github.com/.insteadOf https://github.com/
 
       - name: Release monorepo
         if: ${{ inputs.customRelease }}
