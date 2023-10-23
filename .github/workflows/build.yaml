@@ -135,16 +135,9 @@ jobs:
           release: ${{ inputs.release }}
           release_branches: ${{ inputs.release_branches }}
 
-      - name: git config
-        if: ${{ inputs.customRelease }}
-        run: |
-          git config --global credential.https://github.com.username git
-          git config --global credential.https://github.com.password "$GIT_ACCESS_TOKEN"
-        env:
-          GIT_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
       - name: Release monorepo
         if: ${{ inputs.customRelease }}
         env:
-          GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: yarn release
