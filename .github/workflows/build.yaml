@@ -138,8 +138,10 @@ jobs:
       - name: git config
         if: ${{ inputs.customRelease }}
         run: |
-          git config user.name "${GITHUB_ACTOR}"
-          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git config --global credential.https://github.com.username git
+          git config --global credential.https://github.com.password "$GIT_ACCESS_TOKEN"
+        env:
+          GIT_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
       - name: Release monorepo
         if: ${{ inputs.customRelease }}
         env:
