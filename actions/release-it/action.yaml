@@ -20,15 +20,24 @@ runs:
   using: composite
 
   steps:
-    - name: Configure release-it
+    - name: Configure release-it and git user
       shell: bash
       run: |
+        git config user.name "${GITHUB_ACTOR}"
+        git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+        git config --global url.https://${{ secrets.GH_TOKEN }}@github.com/.insteadOf https://github.com/
         cat ${GITHUB_ACTION_PATH}/.release-it.js > .release-it.js
     - name: Release it
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       shell: bash
       if: ${{ !inputs.monorepo_manager }}
       run: ${{ inputs.package_manager }} release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
     - name: Release it monorepo
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       shell: bash
       if: ${{ inputs.monorepo_manager }}
-      run: ${{ inputs.package_manager }} run release-it -- --config ${GITHUB_ACTION_PATH}/.release-it.js
+      run: ${{ inputs.package_manager }} run release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
