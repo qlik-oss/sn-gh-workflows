@@ -24,6 +24,9 @@ on:
         required: false
         type: string
         default: yarn
+      monorepo_manager:
+        required: false
+        type: string
 
 jobs:
   build_release:
@@ -135,3 +138,5 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           release: ${{ inputs.release }}
           release_branches: ${{ inputs.release_branches }}
+          monorepo_manager: ${{ inputs.monorepo_manager }}
+          package_manager: ${{ inputs.package_manager }}

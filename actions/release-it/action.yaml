@@ -9,9 +9,12 @@ inputs:
   NPM_TOKEN:
     description: ""
     required: true
-  PACKAGE_MANAGER:
+  package_manager:
     description: ""
     required: true
+  monorepo_manager:
+    description: ""
+    required: false
 
 runs:
   using: composite
@@ -22,4 +25,8 @@ runs:
       run: |
         cat ${GITHUB_ACTION_PATH}/.release-it.js > .release-it.js
     - name: Release it
-      run: ${{ inputs.PACKAGE_MANAGER }} release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
+      if: ${{ !inputs.monorepo_manager }}
+      run: ${{ inputs.package_manager }} release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
+    - name: Release it monorepo
+      if: ${{ inputs.monorepo_manager }}
+      run: ${{ inputs.package_manager }} ${{ inputs.monorepo_manager }} run release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
