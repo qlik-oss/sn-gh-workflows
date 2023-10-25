@@ -12,9 +12,6 @@ inputs:
   NPMRC_ENCODED:
     description: "BASE64 encoded .npmrc file"
     required: false
-  REF:
-    description: "Reference to checkout"
-    required: false
 
 runs:
   using: composite
@@ -25,7 +22,6 @@ runs:
       with:
         fetch-depth: 0
         persist-credentials: false
-        ref: ${{ inputs.REF }}
 
     - name: Setup Node
       uses: actions/setup-node@v3
