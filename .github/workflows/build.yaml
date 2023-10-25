@@ -121,7 +121,8 @@ jobs:
           retention-days: 7
 
       - name: Release
-        uses: qlik-oss/sn-gh-workflows/actions/semantic-release@v1
+        if: ${{ inputs.release }}
+        uses: qlik-oss/sn-gh-workflows/actions/release-it@v1
         env:
           HUSKY: 0
         with:

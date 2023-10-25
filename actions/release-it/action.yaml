@@ -1,0 +1,25 @@
+name: "Release-it"
+description: "Execute release-it"
+author: "niek.vanstaveren@qlik.com"
+
+inputs:
+  GH_TOKEN:
+    description: ""
+    required: true
+  NPM_TOKEN:
+    description: ""
+    required: true
+  PACKAGE_MANAGER:
+    description: ""
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Configure release-it
+      shell: bash
+      run: |
+        cat ${GITHUB_ACTION_PATH}/.release-it.js > .release-it.js
+    - name: Release it
+      run: ${{ inputs.PACKAGE_MANAGER }} release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
