@@ -20,6 +20,7 @@ module.exports = {
     commitMessage: `feat(${scope}): released version v${version} [no ci]`,
     requireCommits: true,
     requireCommitsFail: false,
+    requireBranch: process.env.release_branches,
   },
   npm: {
     publish: false,

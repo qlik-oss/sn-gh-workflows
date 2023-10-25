@@ -15,6 +15,9 @@ inputs:
   monorepo_manager:
     description: ""
     required: false
+  release_branches:
+    description: ""
+    required: true
 
 runs:
   using: composite
@@ -31,6 +34,7 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.GH_TOKEN }}
         NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
+        release_branches: ${{ inputs.release_branches }}
       shell: bash
       if: ${{ !inputs.monorepo_manager }}
       run: ${{ inputs.package_manager }} release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
@@ -38,6 +42,7 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.GH_TOKEN }}
         NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
+        release_branches: ${{ inputs.release_branches }}
       shell: bash
       if: ${{ inputs.monorepo_manager }}
       run: ${{ inputs.package_manager }} workspaces run release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
