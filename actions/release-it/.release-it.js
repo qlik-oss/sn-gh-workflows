@@ -2,6 +2,8 @@ const version = "${version}";
 const packageName = process.env.npm_package_name;
 const scope = packageName.split("/")[1];
 
+const releaseBranches = ["main", "master", "release/*"];
+
 module.exports = {
   plugins: {
     "@release-it/conventional-changelog": {
@@ -20,7 +22,7 @@ module.exports = {
     commitMessage: `chore(${scope}): released version v${version} [no ci]`,
     requireCommits: true,
     requireCommitsFail: false,
-    requireBranch: JSON.parse(process.env.release_branches),
+    requireBranch: releaseBranches,
   },
   npm: {
     publish: false,
