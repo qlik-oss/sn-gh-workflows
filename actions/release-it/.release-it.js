@@ -5,10 +5,10 @@ const scope = packageName.split("/")[1];
 
 const releaseBranches = ["main", "master", "release/*"];
 
-const checkRelease = (branchName) => {
-  console.log(branchName);
+const checkRelease = () => {
   if (monorepo) {
-    console.log("This is monorepo", branchName);
+    console.log("This is monorepo");
+    console.log(process.env.branchName);
   }
   return true;
 };
@@ -25,7 +25,7 @@ module.exports = {
     },
   },
   git: {
-    push: checkRelease(branchName),
+    push: checkRelease(),
     tagName: `${packageName}-v${version}`,
     commitsPath: ".",
     commitMessage: `chore(${scope}): released version v${version} [no ci]`,
