@@ -20,7 +20,7 @@ module.exports = {
     commitMessage: `chore(${scope}): released version v${version} [no ci]`,
     requireCommits: true,
     requireCommitsFail: false,
-    requireBranch: process.env.release_branches,
+    requireBranch: JSON.parse(process.env.release_branches),
   },
   npm: {
     publish: false,
