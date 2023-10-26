@@ -57,6 +57,7 @@
     "picasso-plugin-q": "2.1.1",
     "picasso.js": "2.1.1",
     "prettier": "^3.0.3",
+    "release-it": "16.2.1",
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
