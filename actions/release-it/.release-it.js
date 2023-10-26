@@ -6,22 +6,25 @@ const scope = packageName.split("/")[1];
 
 const releaseBranches = ["main", "master", "release/**"];
 
-// Check if branch conditions are met
-if (monorepo) {
-  if (branch_name.indexOf("release") > -1 && branch_name.indexOf(scope) < 0) {
-    console.log(`Skipping release of ${scope} since it should not be released from branch ${branch_name}`);
-    process.exit(0);
+const checkReleaseBranch = (newVersion) => {
+  // Check if branch conditions are met
+  if (monorepo) {
+    if (branch_name.indexOf("release") > -1 && branch_name.indexOf(scope) < 0) {
+      console.log(`Skipping release of ${scope} since it should not be released from branch ${branch_name}`);
+      process.exit(0);
+    }
   }
-}
-if (branch_name.indexOf("release") > -1) {
-  console.log(branch_name, version);
-  console.log(branch_name.slice(-5, -2), version.slice(0, 3));
-  // assuming release branches end with x.x.x
-  if (branch_name.slice(-5, -2) !== version.slice(0, 3)) {
-    console.log(`Skipping release of ${scope}. Only patch release are allowed from ${branch_name}`);
-    process.exit(0);
+  if (branch_name.indexOf("release") > -1) {
+    console.log(branch_name, newVersion);
+    console.log(branch_name.slice(-5, -2), newVersion.slice(0, 3));
+    // assuming release branches end with x.x.x
+    if (branch_name.slice(-5, -2) !== newVersion.slice(0, 3)) {
+      console.log(`Skipping release of ${scope}. Only patch release are allowed from ${branch_name}`);
+      process.exit(0);
+    }
   }
-}
+  return true;
+};
 
 module.exports = {
   plugins: {
@@ -35,7 +38,7 @@ module.exports = {
     },
   },
   git: {
-    push: true,
+    push: checkReleaseBranch(version),
     tagName: `${packageName}-v${version}`,
     commitsPath: ".",
     commitMessage: `chore(${scope}): released version v${version} [no ci]`,
