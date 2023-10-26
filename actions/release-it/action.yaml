@@ -45,4 +45,4 @@ runs:
         release_branches: ${{ inputs.release_branches }}
       shell: bash
       if: ${{ inputs.monorepo_manager }}
-      run: ${{ inputs.package_manager }} workspaces run release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
+      run: ${{ inputs.package_manager }} workspaces run release-it --config ${GITHUB_ACTION_PATH}/.release-it.js -VV
