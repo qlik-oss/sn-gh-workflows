@@ -31,6 +31,7 @@ module.exports = {
     releaseName: `${packageName}-v${version}`,
   },
   hooks: {
+    "before:init": ["git status"],
     "before:git:release": ["git status", "mvm-update", "git add --all"],
     "after:git:release": ["npm publish"],
   },
