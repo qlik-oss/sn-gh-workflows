@@ -11,14 +11,15 @@ const checkRelease = (packageName) => {
     console.log("This is monorepo", packageName);
     console.log(branch_name);
     if (branch_name.indexOf("release") > -1 && branch_name.indexOf(packageName) < 0) {
-      throw new Error(`Skipping release of ${packageName} for release branch ${branch_name}`);
-      // return false;
+      console.log(`Skipping release of ${packageName} for release branch ${branch_name}`);
+      return false;
     }
   }
   if (branch_name.indexOf("release") > -1) {
     // assuming release branches end with x.x.x
     if (branch_name.slice(-5, -2) !== version.slice(0, 3)) {
-      throw new Error(`Cannot release version ${version} from release track ${branch_name}`);
+      console.log(`Cannot release version ${version} from release track ${branch_name}`);
+      return false;
     }
   }
   return true;
