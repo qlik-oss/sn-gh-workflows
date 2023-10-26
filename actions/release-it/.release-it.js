@@ -1,16 +1,11 @@
 const version = "${version}";
 const packageName = process.env.npm_package_name;
-const monorepo = process.env.monorepo;
 const scope = packageName.split("/")[1];
 
 const releaseBranches = ["main", "master", "release/*"];
 
 module.exports = {
   plugins: {
-    "./release-branch-plugin.js": {
-      monorepo,
-      scope,
-    },
     "@release-it/conventional-changelog": {
       path: ".",
       infile: "CHANGELOG.md",
