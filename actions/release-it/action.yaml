@@ -30,7 +30,7 @@ runs:
         git config user.name "${GITHUB_ACTOR}"
         git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
         git config --global url.https://${{ inputs.GH_TOKEN }}@github.com/.insteadOf https://github.com/
-        branch_name=git rev-parse --abbrev-ref HEAD
+        branch_name=$(git rev-parse --abbrev-ref HEAD)
         echo "branch_name=$branch_name" >> "$GITHUB_OUTPUT"
     - name: Release it
       env:
