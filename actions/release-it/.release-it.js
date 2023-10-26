@@ -4,14 +4,22 @@ const monorepo = process.env.monorepo;
 const branch_name = process.env.branch_name;
 const scope = packageName.split("/")[1];
 
-const releaseBranches = ["main", "master"];
+const releaseBranches = ["main", "master", "release/**"];
 
-const getReleaseBranch = (packageName) => {
-  if (monorepo) {
-    return [...releaseBranches, `release/${packageName}-${version.replace(/.$/, "x")}`];
+// Check if branch conditions are met
+if (monorepo) {
+  if (branch_name.indexOf("release") > -1 && branch_name.indexOf(scope) < 0) {
+    console.log(`Skipping release of ${scope} since it should not be released from branch ${branch_name}`);
+    process.exit(0);
   }
-  return [...releaseBranches, `release/${version.replace(/.$/, "x")}`];
-};
+}
+if (branch_name.indexOf("release") > -1) {
+  // assuming release branches end with x.x.x
+  if (branch_name.slice(-5, -2) !== version.slice(0, 3)) {
+    console.log(`Skipping release of ${scope}. Only patch release are allowed from ${branch_name}`);
+    process.exit(0);
+  }
+}
 
 module.exports = {
   plugins: {
@@ -31,7 +39,7 @@ module.exports = {
     commitMessage: `chore(${scope}): released version v${version} [no ci]`,
     requireCommits: true,
     requireCommitsFail: false,
-    requireBranch: getReleaseBranch(packageName),
+    requireBranch: releaseBranches,
   },
   npm: {
     publish: false,
