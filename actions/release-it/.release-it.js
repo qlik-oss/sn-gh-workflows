@@ -1,6 +1,7 @@
 const version = "${version}";
 const packageName = process.env.npm_package_name;
 const monorepo = process.env.monorepo;
+const branch_name = process.env.branch_name;
 const scope = packageName.split("/")[1];
 
 const releaseBranches = ["main", "master", "release/*"];
@@ -8,7 +9,7 @@ const releaseBranches = ["main", "master", "release/*"];
 const checkRelease = () => {
   if (monorepo) {
     console.log("This is monorepo");
-    console.log(process.env.branchName);
+    console.log(branch_name);
   }
   return true;
 };
