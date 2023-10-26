@@ -14,6 +14,8 @@ if (monorepo) {
   }
 }
 if (branch_name.indexOf("release") > -1) {
+  console.log(branch_name, version);
+  console.log(branch_name.slice(-5, -2), version.slice(0, 3));
   // assuming release branches end with x.x.x
   if (branch_name.slice(-5, -2) !== version.slice(0, 3)) {
     console.log(`Skipping release of ${scope}. Only patch release are allowed from ${branch_name}`);
