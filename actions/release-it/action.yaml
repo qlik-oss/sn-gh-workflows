@@ -47,7 +47,6 @@ runs:
         release_branches: ${{ inputs.release_branches }}
         monorepo: ${{ !!inputs.monorepo_manager }}
         branch_name: ${{ steps.git-setup.outputs.branch_name}}
-        action_path: ${GITHUB_ACTION_PATH}
       shell: bash
       if: ${{ inputs.monorepo_manager }}
-      run: ${{ inputs.package_manager }} workspaces run release-it --config ${GITHUB_ACTION_PATH}/.release-it.js -VV
+      run: ${{ inputs.package_manager }} workspaces run release-it --config ${GITHUB_ACTION_PATH}/.release-it.js --action_path ${GITHUB_ACTION_PATH} -VV
