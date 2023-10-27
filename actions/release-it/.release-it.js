@@ -6,7 +6,6 @@ const action_path = process.env.action_path;
 const scope = packageName.split("/")[1];
 
 const releaseBranches = ["main", "master", "release/**"];
-let increment = undefined;
 
 // Check if branch conditions are met
 if (monorepo) {
@@ -15,12 +14,8 @@ if (monorepo) {
     process.exit(0);
   }
 }
-if (branch_name.indexOf("release") > -1) {
-  increment = "patch";
-}
 
 module.exports = {
-  increment,
   plugins: {
     "@release-it/conventional-changelog": {
       path: ".",
