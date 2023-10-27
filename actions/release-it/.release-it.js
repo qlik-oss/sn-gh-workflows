@@ -35,7 +35,11 @@ module.exports = {
     releaseName: `${packageName}-v${version}`,
   },
   hooks: {
-    "before:git:release": ["mvm-update", `node ${process.env.action_path}/check-version`, "git add --all"],
+    "before:git:release": [
+      "mvm-update",
+      `if [ -n "$(node ${process.env.action_path}/check-version)"]; then exit 0; fi`,
+      "git add --all",
+    ],
     "after:git:release": ["npm publish"],
   },
 };
