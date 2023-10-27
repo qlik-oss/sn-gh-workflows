@@ -5,28 +5,21 @@ const branch_name = process.env.branch_name;
 const scope = packageName.split("/")[1];
 
 const releaseBranches = ["main", "master", "release/**"];
+let increment = undefined;
 
-const checkReleaseBranch = (newVersion) => {
-  // Check if branch conditions are met
-  if (monorepo) {
-    if (branch_name.indexOf("release") > -1 && branch_name.indexOf(scope) < 0) {
-      console.log(`Skipping release of ${scope} since it should not be released from branch ${branch_name}`);
-      process.exit(0);
-    }
+// Check if branch conditions are met
+if (monorepo) {
+  if (branch_name.indexOf("release") > -1 && branch_name.indexOf(scope) < 0) {
+    console.log(`Skipping release of ${scope} since it should not be released from branch ${branch_name}`);
+    process.exit(0);
   }
-  if (branch_name.indexOf("release") > -1) {
-    console.log(branch_name, newVersion);
-    console.log(branch_name.slice(-5, -2), newVersion.slice(0, 3));
-    // assuming release branches end with x.x.x
-    if (branch_name.slice(-5, -2) !== newVersion.slice(0, 3)) {
-      console.log(`Skipping release of ${scope}. Only patch release are allowed from ${branch_name}`);
-      process.exit(0);
-    }
-  }
-  return true;
-};
+}
+if (branch_name.indexOf("release") > -1) {
+  increment = "patch";
+}
 
 module.exports = {
+  increment,
   plugins: {
     "@release-it/conventional-changelog": {
       path: ".",
@@ -38,7 +31,7 @@ module.exports = {
     },
   },
   git: {
-    push: checkReleaseBranch(version),
+    push: true,
     tagName: `${packageName}-v${version}`,
     commitsPath: ".",
     commitMessage: `chore(${scope}): released version v${version} [no ci]`,
