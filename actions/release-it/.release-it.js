@@ -38,7 +38,7 @@ module.exports = {
     "before:git:release": [
       "mvm-update",
       `#!/bin/bash
-      if [ -n "$(node ${process.env.action_path}/check-version)"]; then exit 0; fi`,
+      if [ -n "$(node ${process.env.action_path}/check-version)" ]; then exit 0; fi`,
       "git add --all",
     ],
     "after:git:release": ["npm publish"],
