@@ -31,7 +31,8 @@ runs:
         git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
         git config --global url.https://${{ inputs.GH_TOKEN }}@github.com/.insteadOf https://github.com/
         branch_name=$(git rev-parse --abbrev-ref HEAD)
-        echo "branch_name=$branch_name" >> "$GITHUB_OUTPUT"
+        echo "branch_name=$branch_name" >> $GITHUB_ENV
+        echo "action_path=${GITHUB_ACTION_PATH}" >> $GITHUB_ENV
     - name: Release it
       env:
         GITHUB_TOKEN: ${{ inputs.GH_TOKEN }}
@@ -46,8 +47,6 @@ runs:
         NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
         release_branches: ${{ inputs.release_branches }}
         monorepo: ${{ !!inputs.monorepo_manager }}
-        branch_name: ${{ steps.git-setup.outputs.branch_name}}
-        action_path: ${{ GITHUB_ACTION_PATH }}
       shell: bash
       if: ${{ inputs.monorepo_manager }}
       run: ${{ inputs.package_manager }} workspaces run release-it --config ${GITHUB_ACTION_PATH}/.release-it.js -VV
