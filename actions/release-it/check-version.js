@@ -3,10 +3,10 @@ const fs = require("fs");
 const jsonString = fs.readFileSync("./package.json");
 const packageJson = JSON.parse(jsonString);
 
-const branch = process.env.branch_name;
-const newVersion = packageJson.version;
+const branch = process.env.branch_name || "0.0.x";
+const newVersion = packageJson.version || "1.0.x";
 const { monorepo } = process.env || false;
-const packageName = process.env.npm_package_name;
+const packageName = process.env.npm_package_name || "";
 const scope = packageName.split("/")[1];
 
 if (monorepo) {
