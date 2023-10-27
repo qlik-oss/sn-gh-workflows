@@ -2,6 +2,7 @@ const version = "${version}";
 const packageName = process.env.npm_package_name;
 const monorepo = process.env.monorepo;
 const branch_name = process.env.branch_name;
+const action_path = process.env.action_path;
 const scope = packageName.split("/")[1];
 
 const releaseBranches = ["main", "master", "release/**"];
@@ -48,7 +49,7 @@ module.exports = {
     releaseName: `${packageName}-v${version}`,
   },
   hooks: {
-    "before:git:release": ["mvm-update", "git add --all"],
+    "before:git:release": ["mvm-update", `node ${action_path}/check-version --version=${version}`, "git add --all"],
     "after:git:release": ["npm publish"],
   },
 };
