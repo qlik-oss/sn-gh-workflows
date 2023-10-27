@@ -1,12 +1,7 @@
-const { parseArgs } = require("node:util");
+const fs = require("fs");
 
-const { values: args } = parseArgs({
-  options: {
-    version: {
-      type: "string",
-      default: "the default",
-    },
-  },
-});
+console.log("in the check version", process.env.version);
+const jsonString = fs.readFileSync("./package.json");
+const packageJson = JSON.parse(jsonString);
 
-console.log(args.version);
+console.log("version from package.json", packageJson.version);
