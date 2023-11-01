@@ -41,7 +41,7 @@ runs:
         monorepo: ${{ inputs.monorepo }}
       shell: bash
       run: |
-        if [[ ${{ inputs.monorepo }} ]]; then
+        if ${{ inputs.monorepo }}; then
           ${{ inputs.package_manager }} workspaces run release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
         else
           ${{ inputs.package_manager }} release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
