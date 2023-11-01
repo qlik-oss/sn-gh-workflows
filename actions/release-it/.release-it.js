@@ -6,7 +6,7 @@ const scope = packageName.split("/")[1];
 const releaseBranches = ["main", "master", "release/**"];
 
 let tagName = `v${version}`;
-if (monorepo) {
+if (monorepo === true || monorepo === "true") {
   console.log("monorepo");
   tagName = `${packageName}-${tagName}`;
 }
