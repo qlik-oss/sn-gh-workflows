@@ -35,7 +35,7 @@ module.exports = {
   },
   hooks: {
     "before:git:release": [
-      `${monorepo} && mvm-update`,
+      `if ${monorepo}; then mvm-update; fi`,
       `#!/bin/bash
       if [ -n "$(node ${process.env.action_path}/check-version)" ]; then exit 1; fi`,
       "git add --all",
