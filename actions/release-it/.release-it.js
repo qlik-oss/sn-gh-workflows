@@ -31,7 +31,7 @@ module.exports = {
   },
   github: {
     release: true,
-    releaseName: `${packageName}-v${version}`,
+    releaseName: monorepo ? `${packageName}-v${version}` : `v${version}`,
   },
   hooks: {
     "before:git:release": [
