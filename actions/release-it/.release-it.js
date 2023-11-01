@@ -1,10 +1,9 @@
 const version = "${version}";
 const packageName = process.env.npm_package_name;
+const monorepo = process.env.monorepo;
 const scope = packageName.split("/")[1];
 
 const releaseBranches = ["main", "master", "release/**"];
-
-// Check if branch conditions are met
 
 module.exports = {
   plugins: {
@@ -36,7 +35,7 @@ module.exports = {
   },
   hooks: {
     "before:git:release": [
-      "mvm-update",
+      `${monorepo} && mvm-update`,
       `#!/bin/bash
       if [ -n "$(node ${process.env.action_path}/check-version)" ]; then exit 1; fi`,
       "git add --all",

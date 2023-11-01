@@ -22,9 +22,10 @@ on:
         required: false
         type: string
         default: yarn
-      monorepo_manager:
+      monorepo:
         required: false
-        type: string
+        type: boolean
+        default: false
 
 jobs:
   build_release:
@@ -136,5 +137,5 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           release: ${{ inputs.release }}
           release_branches: ${{ inputs.release_branches }}
-          monorepo_manager: ${{ inputs.monorepo_manager }}
+          monorepo: ${{ inputs.monorepo }}
           package_manager: ${{ inputs.package_manager }}
