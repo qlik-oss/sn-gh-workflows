@@ -5,6 +5,9 @@ const scope = packageName.split("/")[1];
 
 const releaseBranches = ["main", "master", "release/**"];
 
+console.log("From the config. tagName:", monorepo ? `${packageName}-v${version}` : `v${version}`);
+console.log("Monorepo:", monorepo);
+
 module.exports = {
   plugins: {
     "@release-it/conventional-changelog": {
