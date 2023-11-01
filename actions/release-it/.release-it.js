@@ -18,7 +18,7 @@ module.exports = {
   },
   git: {
     push: true,
-    tagName: `${packageName}-v${version}`,
+    tagName: monorepo ? `${packageName}-v${version}` : `v${version}`,
     commitsPath: ".",
     commitMessage: `chore(${scope}): released version v${version} [no ci]`,
     requireCommits: true,
