@@ -15,6 +15,6 @@ if (monorepo) {
   }
 }
 
-if (branch.slice(-5, -2) !== newVersion.slice(0, 3)) {
+if (branch.indexOf("release") > -1 && branch.slice(-5, -2) !== newVersion.slice(0, 3)) {
   console.log(`You are releasing from a patch release track. Release ${newVersion} is not allowed on branch ${branch}`);
 }
