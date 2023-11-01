@@ -5,8 +5,11 @@ const scope = packageName.split("/")[1];
 
 const releaseBranches = ["main", "master", "release/**"];
 
-console.log("From the config. tagName:", monorepo ? `${packageName}-v${version}` : `v${version}`);
-console.log("Monorepo:", monorepo);
+let tagName = `v${version}`;
+if (monorepo) {
+  console.log("monorepo");
+  tagName = `${packageName}-${tagName}`;
+}
 
 module.exports = {
   plugins: {
@@ -21,7 +24,7 @@ module.exports = {
   },
   git: {
     push: true,
-    tagName: monorepo ? `${packageName}-v${version}` : `v${version}`,
+    tagName,
     commitsPath: ".",
     commitMessage: `chore(${scope}): released version v${version} [no ci]`,
     requireCommits: true,
@@ -34,7 +37,7 @@ module.exports = {
   },
   github: {
     release: true,
-    releaseName: monorepo ? `${packageName}-v${version}` : `v${version}`,
+    releaseName: tagName,
   },
   hooks: {
     "before:git:release": [
