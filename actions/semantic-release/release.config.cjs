@@ -13,7 +13,7 @@ const config = {
     [
       "@semantic-release/exec",
       {
-        prepareCmd: "yarn spec",
+        prepareCmd: "yarn spec && yarn build",
         successCmd: "$GITHUB_ACTION_PATH/api-compliance.sh ${nextRelease.version}",
       },
     ],
