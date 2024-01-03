@@ -30,11 +30,13 @@ jobs:
     secrets: inherit
     with:
       release: ${{ inputs.release || false}}
+      api_specification_path: path-to-spec-file
 ```
 
 This will trigger a build for pull requests to main, every new commit on main and manually by the user.
 
 In order to upload unit test results to codeclimate you will need to add the test reporter id for your repository as a secret: `CC_TEST_REPORTER_ID`
+Make sure to add the correct path to your api specification file. The workflow will use `api-spec/spec.json` as default
 
 ### Trigger a release
 
