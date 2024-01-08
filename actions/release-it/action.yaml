@@ -33,6 +33,8 @@ runs:
         branch_name=$(git rev-parse --abbrev-ref HEAD)
         echo "branch_name=$branch_name" >> $GITHUB_ENV
         echo "action_path=${GITHUB_ACTION_PATH}" >> $GITHUB_ENV
+        pnpm add -g release-it@17.0.1
+        pnpm add -g @release-it/conventional-changelog
     - name: Release it
       env:
         GITHUB_TOKEN: ${{ inputs.GH_TOKEN }}
