@@ -7,7 +7,6 @@ const releaseBranches = ["main", "master", "release/**", "alpha", "beta"];
 
 let tagName = `v${version}`;
 if (monorepo === true || monorepo === "true") {
-  console.log("monorepo");
   tagName = `${packageName}-${tagName}`;
 }
 
