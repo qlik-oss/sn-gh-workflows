@@ -44,5 +44,5 @@ runs:
         if ${{ inputs.monorepo }}; then
           ${{ inputs.package_manager }} workspaces run release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
         else
-          ${{ inputs.package_manager }} release-it --config ${GITHUB_ACTION_PATH}/.release-it.js --VV
+          ${{ inputs.package_manager }} release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
         fi
