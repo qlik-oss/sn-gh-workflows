@@ -3,7 +3,7 @@ const packageName = process.env.npm_package_name;
 const monorepo = process.env.monorepo;
 const scope = packageName.split("/")[1];
 
-const releaseBranches = ["main", "master", "release/**"];
+const releaseBranches = ["main", "master", "release/**", "alpha", "beta"];
 
 let tagName = `v${version}`;
 if (monorepo === true || monorepo === "true") {
