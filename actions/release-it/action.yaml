@@ -45,7 +45,7 @@ runs:
       shell: bash
       run: |
         if ${{ inputs.monorepo }}; then
-          ${{ inputs.package_manager }} workspaces exec npx release-it@17.0.1 --config ${GITHUB_ACTION_PATH}/.release-it.js
+          pnpm exec npx release-it@17.0.1 --config ${GITHUB_ACTION_PATH}/.release-it.js
         else
           npx release-it@17.0.1 --config ${GITHUB_ACTION_PATH}/.release-it.js
         fi
