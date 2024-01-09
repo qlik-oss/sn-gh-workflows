@@ -33,8 +33,6 @@ runs:
         branch_name=$(git rev-parse --abbrev-ref HEAD)
         echo "branch_name=$branch_name" >> $GITHUB_ENV
         echo "action_path=${GITHUB_ACTION_PATH}" >> $GITHUB_ENV
-        pnpm add -g @b12k/mvm@0.0.10
-        pnpm add -g @release-it/conventional-changelog@7.0.2
     - name: Release it
       env:
         GITHUB_TOKEN: ${{ inputs.GH_TOKEN }}
@@ -45,7 +43,10 @@ runs:
       shell: bash
       run: |
         if ${{ inputs.monorepo }}; then
+          pnpm add -g @b12k/mvm@0.0.10
+          pnpm add -g @release-it/conventional-changelog@7.0.2
           pnpm exec npx release-it@17.0.1 --config ${GITHUB_ACTION_PATH}/.release-it.js
         else
+          pnpm add -g @release-it/conventional-changelog@7.0.2
           npx release-it@17.0.1 --config ${GITHUB_ACTION_PATH}/.release-it.js
         fi
