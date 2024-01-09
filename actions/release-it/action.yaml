@@ -41,6 +41,7 @@ runs:
         NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
         release_branches: ${{ inputs.release_branches }}
         monorepo: ${{ inputs.monorepo }}
+        package_manager: ${{ inputs.package_manager }}
       shell: bash
       run: |
         if ${{ inputs.monorepo }}; then

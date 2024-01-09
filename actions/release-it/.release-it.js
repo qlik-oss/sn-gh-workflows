@@ -45,6 +45,6 @@ module.exports = {
       if [ -n "$(node ${process.env.action_path}/check-version)" ]; then exit 1; fi`,
       "git add --all",
     ],
-    "after:git:release": ["npm publish"],
+    "after:git:release": [`${process.env.package_manager} publish`],
   },
 };
