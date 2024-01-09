@@ -43,7 +43,8 @@ runs:
       shell: bash
       run: |
         if ${{ inputs.monorepo }}; then
-          pnpm -r --workspace-concurrency 1 exec npx --package=@release-it/conventional-changelog@7.0.2 --package=release-it@16.2.1 --package=@b12k/mvm@0.0.10 -- release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
+          pnpm config set workspace-concurrency 1
+          pnpm -r exec npx --package=@release-it/conventional-changelog@7.0.2 --package=release-it@16.2.1 --package=@b12k/mvm@0.0.10 -- release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
         else
           npx --package=@release-it/conventional-changelog@7.0.2 --package=release-it@16.2.1 -- release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
         fi
