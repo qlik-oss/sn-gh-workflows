@@ -21,7 +21,7 @@ on:
       package_manager:
         required: false
         type: string
-        default: yarn
+        default: pnpm
       monorepo:
         required: false
         type: boolean
