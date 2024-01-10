@@ -1,5 +1,7 @@
 const version = "${version}";
 const packageName = process.env.npm_package_name;
+const packageManager = process.env.package_manager;
+const actionPath = process.env.action_path;
 const monorepo = process.env.monorepo;
 const scope = packageName.split("/")[1];
 
@@ -42,9 +44,11 @@ module.exports = {
     "before:git:release": [
       `if ${monorepo}; then mvm-update; fi`,
       `#!/bin/bash
-      if [ -n "$(node ${process.env.action_path}/check-version)" ]; then exit 1; fi`,
+      if [ -n "$(node ${actionPath}/check-version)" ]; then exit 1; fi`,
+      `${packageManager} spec && ${packageManager} build`,
+      `${actionPath}/api-compliance.sh ${version}`,
       "git add --all",
     ],
-    "after:git:release": [`${process.env.package_manager} publish`],
+    "after:git:release": [`${packageManager} publish`],
   },
 };
