@@ -3,6 +3,21 @@ description: "Execute release-it"
 author: "niek.vanstaveren@qlik.com"
 
 inputs:
+  API_SPECIFICATION_PATH:
+    description: "The path to the api specification file"
+    required: true
+  API_KEY:
+    description: "The api key"
+    required: true
+  APICULTURIST_S3:
+    description: ""
+    required: true
+  APICULTURIST_GITHUB:
+    description: ""
+    required: true
+  APICULTURIST_TOKEN:
+    description: ""
+    required: true
   GH_TOKEN:
     description: ""
     required: true
@@ -40,6 +55,11 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.GH_TOKEN }}
         NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
+        API_SPECIFICATION_PATH: ${{ inputs.API_SPECIFICATION_PATH }}
+        API_KEY: ${{ inputs.API_KEY }}
+        APICULTURIST_S3: ${{ inputs.APICULTURIST_S3 }}
+        APICULTURIST_GITHUB: ${{ inputs.APICULTURIST_GITHUB }}
+        APICULTURIST_TOKEN: ${{ inputs.APICULTURIST_TOKEN }}
         release_branches: ${{ inputs.release_branches }}
         monorepo: ${{ inputs.monorepo }}
         package_manager: ${{ inputs.package_manager }}
