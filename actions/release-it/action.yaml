@@ -18,6 +18,9 @@ inputs:
   release_branches:
     description: ""
     required: true
+  spec_command:
+    description: ""
+    required: true
 
 runs:
   using: composite
@@ -40,6 +43,7 @@ runs:
         release_branches: ${{ inputs.release_branches }}
         monorepo: ${{ inputs.monorepo }}
         package_manager: ${{ inputs.package_manager }}
+        spec_command: ${{ inputs.spec_command }}
       shell: bash
       run: |
         if ${{ inputs.monorepo }}; then

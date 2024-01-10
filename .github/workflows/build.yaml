@@ -139,3 +139,4 @@ jobs:
           release_branches: ${{ inputs.release_branches }}
           monorepo: ${{ inputs.monorepo }}
           package_manager: ${{ inputs.package_manager }}
+          spec_command: contains(fromJSON(steps.package.outputs.result), 'spec')
