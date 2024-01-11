@@ -12,9 +12,7 @@ on:
           [
             'main',
             'master',
-            {name: 'beta', prerelease: true},
-            {name: 'alpha', prerelease: true},
-            '+([0-9])?(.{+([0-9]),x}).x'
+            'release/*'
           ]
         type: string
       api_specification_path:
@@ -23,7 +21,11 @@ on:
       package_manager:
         required: false
         type: string
-        default: yarn
+        default: pnpm
+      monorepo:
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   build_release:
@@ -121,7 +123,8 @@ jobs:
           retention-days: 7
 
       - name: Release
-        uses: qlik-oss/sn-gh-workflows/actions/semantic-release@v1
+        if: ${{ inputs.release }}
+        uses: qlik-oss/sn-gh-workflows/actions/release-it@v2
         env:
           HUSKY: 0
         with:
@@ -134,3 +137,6 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           release: ${{ inputs.release }}
           release_branches: ${{ inputs.release_branches }}
+          monorepo: ${{ inputs.monorepo }}
+          package_manager: ${{ inputs.package_manager }}
+          spec_command: ${{ contains(fromJSON(steps.package.outputs.result), 'spec') }}

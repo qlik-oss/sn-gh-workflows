@@ -1,0 +1,74 @@
+name: "Release-it"
+description: "Execute release-it"
+author: "niek.vanstaveren@qlik.com"
+
+inputs:
+  API_SPECIFICATION_PATH:
+    description: "The path to the api specification file"
+    required: true
+  API_KEY:
+    description: "The api key"
+    required: true
+  APICULTURIST_S3:
+    description: ""
+    required: true
+  APICULTURIST_GITHUB:
+    description: ""
+    required: true
+  APICULTURIST_TOKEN:
+    description: ""
+    required: true
+  GH_TOKEN:
+    description: ""
+    required: true
+  NPM_TOKEN:
+    description: ""
+    required: true
+  package_manager:
+    description: ""
+    required: true
+  monorepo:
+    description: ""
+    required: false
+  release_branches:
+    description: ""
+    required: true
+  spec_command:
+    description: ""
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Configure release-it and git user
+      id: git-setup
+      shell: bash
+      run: |
+        git config user.name "${GITHUB_ACTOR}"
+        git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+        git config --global url.https://${{ inputs.GH_TOKEN }}@github.com/.insteadOf https://github.com/
+        branch_name=$(git rev-parse --abbrev-ref HEAD)
+        echo "branch_name=$branch_name" >> $GITHUB_ENV
+        echo "action_path=${GITHUB_ACTION_PATH}" >> $GITHUB_ENV
+    - name: Release it
+      env:
+        GITHUB_TOKEN: ${{ inputs.GH_TOKEN }}
+        NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
+        API_SPECIFICATION_PATH: ${{ inputs.API_SPECIFICATION_PATH }}
+        API_KEY: ${{ inputs.API_KEY }}
+        APICULTURIST_S3: ${{ inputs.APICULTURIST_S3 }}
+        APICULTURIST_GITHUB: ${{ inputs.APICULTURIST_GITHUB }}
+        APICULTURIST_TOKEN: ${{ inputs.APICULTURIST_TOKEN }}
+        release_branches: ${{ inputs.release_branches }}
+        monorepo: ${{ inputs.monorepo }}
+        package_manager: ${{ inputs.package_manager }}
+        spec_command: ${{ inputs.spec_command }}
+      shell: bash
+      run: |
+        if ${{ inputs.monorepo }}; then
+          pnpm config set workspace-concurrency 1
+          pnpm -r exec npx --package=@release-it/conventional-changelog@7.0.2 --package=release-it@16.2.1 --package=@b12k/mvm@0.0.10 -- release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
+        else
+          npx --package=@release-it/conventional-changelog@7.0.2 --package=release-it@16.2.1 -- release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
+        fi
