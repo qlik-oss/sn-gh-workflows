@@ -45,7 +45,7 @@ jobs:
           package_manager: ${{ inputs.package_manager }}
 
       - name: Read package.json
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         id: package
         with:
           script: |
