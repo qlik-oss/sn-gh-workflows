@@ -46,7 +46,7 @@ module.exports = {
       `if ${monorepo}; then mvm-update; fi`,
       `#!/bin/bash
       if [ -n "$(node ${actionPath}/check-version)" ]; then exit 1; fi`,
-      `if ${specCommand}; then ${packageManager} spec && ${packageManager} build; fi`,
+      `if ${specCommand}; then ${packageManager} install && ${packageManager} run spec && ${packageManager} run build; fi`,
       `if ${specCommand}; then ${actionPath}/api-compliance.sh ${version}; fi`,
       "git add --all",
     ],
