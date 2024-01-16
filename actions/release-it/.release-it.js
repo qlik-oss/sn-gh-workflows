@@ -1,9 +1,16 @@
 const version = "${version}";
-const packageName = process.env.package_name;
+let packageName = process.env.PNPM_PACKAGE_NAME;
 const packageManager = process.env.package_manager;
 const actionPath = process.env.action_path;
 const monorepo = process.env.monorepo;
 const specCommand = process.env.spec_command;
+
+if (!packageName) {
+  const fs = require("fs");
+  const jsonString = fs.readFileSync("./package.json");
+  const package = JSON.parse(jsonString);
+  packageName = package.name;
+}
 const scope = packageName.split("/")[1];
 
 let assets = "package.json ";
