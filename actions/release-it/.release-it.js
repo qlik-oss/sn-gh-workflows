@@ -6,7 +6,7 @@ const monorepo = process.env.monorepo;
 const specCommand = process.env.spec_command;
 const scope = packageName.split("/")[1];
 
-const assets = "package.json ";
+let assets = "package.json ";
 if (process.env.API_SPECIFICATION_PATH) {
   assets += process.env.API_SPECIFICATION_PATH;
 } else {
