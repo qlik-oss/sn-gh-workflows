@@ -6,13 +6,6 @@ const monorepo = process.env.monorepo;
 const specCommand = process.env.spec_command;
 const scope = packageName.split("/")[1];
 
-let assets = "package.json ";
-if (process.env.API_SPECIFICATION_PATH) {
-  assets += process.env.API_SPECIFICATION_PATH;
-} else {
-  assets += "api-spec/spec.json";
-}
-
 const releaseBranches = ["main", "master", "release/**", "alpha", "beta"];
 
 let tagName = `v${version}`;
@@ -49,13 +42,14 @@ module.exports = {
     releaseName: tagName,
   },
   hooks: {
+    "before:init": ["git restore ."],
     "before:git:release": [
       `if ${monorepo}; then mvm-update; fi`,
       `#!/bin/bash
       if [ -n "$(node ${actionPath}/check-version)" ]; then exit 1; fi`,
       `if ${specCommand}; then npm run spec && ${packageManager} run build; fi`,
       `if ${specCommand}; then ${actionPath}/api-compliance.sh ${version}; fi`,
-      `git add ${assets}`,
+      "git add --all",
     ],
     "after:git:release": [`${packageManager} publish`],
   },
