@@ -1,5 +1,5 @@
 const version = "${version}";
-const packageName = process.env.npm_package_name || "";
+const packageName = process.env.package_name;
 const packageManager = process.env.package_manager;
 const actionPath = process.env.action_path;
 const monorepo = process.env.monorepo;
