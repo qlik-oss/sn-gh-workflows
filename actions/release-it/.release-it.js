@@ -32,6 +32,7 @@ module.exports = {
     requireCommits: true,
     requireCommitsFail: false,
     requireBranch: releaseBranches,
+    requireCleanWorkingDir: true,
   },
   npm: {
     publish: false,
