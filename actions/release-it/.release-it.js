@@ -12,7 +12,7 @@ if (process.env.API_SPECIFICATION_PATH) {
 } else {
   assets += "api-spec/spec.json";
 }
-if (monorepo) {
+if (monorepo === true || monorepo === "true") {
   assets += " */package.json";
 }
 
