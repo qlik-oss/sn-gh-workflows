@@ -20,7 +20,7 @@ if (process.env.API_SPECIFICATION_PATH) {
   assets += "api-spec/spec.json";
 }
 if (monorepo) {
-  assets += " **/mvm.lock";
+  assets += " ../**/mvm.lock";
 }
 
 const releaseBranches = ["main", "master", "release/**", "alpha", "beta"];
