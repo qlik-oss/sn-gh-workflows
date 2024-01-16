@@ -12,9 +12,6 @@ if (process.env.API_SPECIFICATION_PATH) {
 } else {
   assets += "api-spec/spec.json";
 }
-if (monorepo === true || monorepo === "true") {
-  assets += " */package.json";
-}
 
 const releaseBranches = ["main", "master", "release/**", "alpha", "beta"];
 
