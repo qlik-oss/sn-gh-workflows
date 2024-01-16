@@ -16,7 +16,7 @@ const scope = packageName.split("/")[1];
 let assets = "package.json ";
 if (process.env.API_SPECIFICATION_PATH) {
   assets += process.env.API_SPECIFICATION_PATH;
-} else if (specCommand) {
+} else if (specCommand === true || specCommand === "true") {
   assets += "api-spec/spec.json";
 }
 
