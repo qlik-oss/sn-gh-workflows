@@ -53,6 +53,7 @@ module.exports = {
   },
   hooks: {
     "before:git:release": [
+      "git clean -df",
       `if ${monorepo}; then mvm-update; fi`,
       `#!/bin/bash
       if [ -n "$(node ${actionPath}/check-version)" ]; then exit 1; fi`,
