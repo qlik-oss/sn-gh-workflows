@@ -46,8 +46,7 @@ module.exports = {
       `if ${monorepo}; then mvm-update; fi`,
       `#!/bin/bash
       if [ -n "$(node ${actionPath}/check-version)" ]; then exit 1; fi`,
-      'find node_modules -name "@release-it/conventional-changelog" -type f -delete',
-      `if ${specCommand}; then ${packageManager} run spec && ${packageManager} run build; fi`,
+      `if ${specCommand}; then npm run spec && ${packageManager} run build; fi`,
       `if ${specCommand}; then ${actionPath}/api-compliance.sh ${version}; fi`,
       "git add --all",
     ],
