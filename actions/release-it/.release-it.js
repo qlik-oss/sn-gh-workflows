@@ -65,6 +65,6 @@ module.exports = {
       `if ${specCommand}; then ${actionPath}/api-compliance.sh ${version}; fi`,
       `git add ${assets}`,
     ],
-    "after:git:release": ["git status", `${packageManager} publish`],
+    "after:git:release": ["git reset --hard", "git clean -df", `${packageManager} publish`],
   },
 };
