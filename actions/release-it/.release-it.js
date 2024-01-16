@@ -19,6 +19,9 @@ if (process.env.API_SPECIFICATION_PATH) {
 } else if (specCommand === true || specCommand === "true") {
   assets += "api-spec/spec.json";
 }
+if (monorepo) {
+  assets += " **/mvm.lock";
+}
 
 const releaseBranches = ["main", "master", "release/**", "alpha", "beta"];
 
