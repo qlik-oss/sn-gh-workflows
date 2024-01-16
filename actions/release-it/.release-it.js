@@ -54,10 +54,10 @@ module.exports = {
       `if ${monorepo}; then mvm-update; fi`,
       `#!/bin/bash
       if [ -n "$(node ${actionPath}/check-version)" ]; then exit 1; fi`,
-      `if ${specCommand}; then npm run spec && ${packageManager} run build; fi`,
+      `if ${specCommand}; then ${packageManager} run spec && ${packageManager} run build; fi`,
       `if ${specCommand}; then ${actionPath}/api-compliance.sh ${version}; fi`,
       `git add ${assets}`,
     ],
-    "after:git:release": ["git reset --hard", "git clean -df", `${packageManager} publish`],
+    "after:git:release": [`${packageManager} publish`],
   },
 };
