@@ -5,6 +5,7 @@ const actionPath = process.env.action_path;
 const monorepo = process.env.monorepo;
 const specCommand = process.env.spec_command;
 let apiKey = process.env.API_KEY;
+console.log("api key", apiKey);
 
 if (!packageName) {
   const fs = require("fs");
@@ -22,8 +23,8 @@ if (process.env.API_SPECIFICATION_PATH) {
 }
 if (monorepo) {
   assets += " ../**/mvm.lock";
-  apiKey = apiKey[scope];
-  console.log(apiKey);
+  apiKey = JSON.parse(apiKey)[scope];
+  console.log("monorepo api key", apiKey);
 }
 
 const releaseBranches = ["main", "master", "release/**", "alpha", "beta"];
