@@ -4,8 +4,7 @@ const packageManager = process.env.package_manager;
 const actionPath = process.env.action_path;
 const monorepo = process.env.monorepo;
 const specCommand = process.env.spec_command;
-let apiKey = process.env.API_KEY;
-console.log("api key", apiKey);
+const API_KEY = process.env.API_KEY;
 
 if (!packageName) {
   const fs = require("fs");
@@ -23,8 +22,9 @@ if (process.env.API_SPECIFICATION_PATH) {
 }
 if (monorepo) {
   assets += " ../**/mvm.lock";
-  apiKey = JSON.parse(apiKey)[scope];
-  console.log("monorepo api key", apiKey);
+  process.env.CURRENT_API_KEY = JSON.parse(API_KEY)[scope];
+} else {
+  process.env.CURRENT_API_KEY = API_KEY;
 }
 
 const releaseBranches = ["main", "master", "release/**", "alpha", "beta"];
@@ -70,7 +70,6 @@ module.exports = {
       if [ -n "$(node ${actionPath}/check-version)" ]; then exit 1; fi`,
       `if ${specCommand}; then ${packageManager} run spec && ${packageManager} run build; fi`,
       `if ${specCommand}; then ${actionPath}/api-compliance.sh ${version} ${apiKey}; fi`,
-      `if ${apiKey}; then echo found api key; fi`,
       `git add ${assets}`,
     ],
     "after:git:release": ["git reset --hard", "git clean -df", `${packageManager} publish`],
