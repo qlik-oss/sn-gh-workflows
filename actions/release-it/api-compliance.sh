@@ -1,11 +1,7 @@
 #!/bin/bash
 
-if [ -z "$API_KEY" ]; then
-  echo "No API_KEY. Will skip compliance check"
-  exit 0
-fi
-
 version=$1
+API_KEY=$2
 docker pull ghcr.io/qlik-download/api-compliance
 docker create -v /specs --name specs alpine:3.4 "/bin/true"
 docker cp "$API_SPECIFICATION_PATH" specs:/specs/properties.json
