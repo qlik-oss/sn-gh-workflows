@@ -41,7 +41,7 @@ jobs:
         run: echo "version=$(yarn -s run playwright --version | base64)" >> $GITHUB_OUTPUT
 
       - name: Cache playwright binaries
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: playwright-cache
         with:
           path: ${{ matrix.cache_dir }}
