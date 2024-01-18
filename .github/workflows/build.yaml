@@ -124,7 +124,7 @@ jobs:
 
       - name: Release
         if: ${{ inputs.release }}
-        uses: qlik-oss/sn-gh-workflows/actions/release-it@dvr/api-key
+        uses: qlik-oss/sn-gh-workflows/actions/release-it@v2
         env:
           HUSKY: 0
         with:
