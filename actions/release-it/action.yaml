@@ -69,7 +69,7 @@ runs:
       run: |
         if ${{ inputs.monorepo }}; then
           pnpm config set workspace-concurrency 1
-          pnpm -r exec release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
+          pnpm -r exec release-it --config ${GITHUB_ACTION_PATH}/.release-it.js -V
         else
           release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
         fi
