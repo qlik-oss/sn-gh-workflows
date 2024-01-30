@@ -64,7 +64,7 @@ runs:
       uses: oven-sh/setup-bun@v1
 
     - name: Setup Node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: 18
         cache: ${{ inputs.package_manager != 'bun' && inputs.package_manager || null }}
