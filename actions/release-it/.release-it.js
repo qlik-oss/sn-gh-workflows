@@ -70,7 +70,7 @@ module.exports = {
       if [ -n "$(node ${actionPath}/check-version)" ]; then exit 1; fi`,
       `if ${specCommand}; then ${packageManager} run spec && ${packageManager} run build; fi`,
       `if ${specCommand}; then ${actionPath}/api-compliance.sh ${version}; fi`,
-      `git add ${assets}`,
+      `git add ${assets} --ignore-errors || echo "Missing files"`,
     ],
     "after:git:release": ["git reset --hard", "git clean -df", `${packageManager} publish`],
   },
