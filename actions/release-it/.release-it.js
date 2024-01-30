@@ -21,7 +21,6 @@ if (process.env.API_SPECIFICATION_PATH) {
   assets += "api-spec/spec.json";
 }
 if (monorepo) {
-  assets += " ../**/mvm.lock";
   process.env.CURRENT_API_KEY = JSON.parse(API_KEY)[scope];
 } else {
   process.env.CURRENT_API_KEY = API_KEY;
@@ -65,12 +64,12 @@ module.exports = {
   hooks: {
     "before:git:release": [
       "git clean -df",
-      `if ${monorepo}; then mvm-update; fi`,
+      `if ${monorepo}; then mvm-update && git add mvm.lock || echo "Did not update mvm.lock"; fi`,
       `#!/bin/bash
       if [ -n "$(node ${actionPath}/check-version)" ]; then exit 1; fi`,
       `if ${specCommand}; then ${packageManager} run spec && ${packageManager} run build; fi`,
       `if ${specCommand}; then ${actionPath}/api-compliance.sh ${version}; fi`,
-      `git add ${assets} --ignore-errors || echo "Missing files"`,
+      `git add ${assets}"`,
     ],
     "after:git:release": ["git reset --hard", "git clean -df", `${packageManager} publish`],
   },
