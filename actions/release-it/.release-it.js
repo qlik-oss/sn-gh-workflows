@@ -68,9 +68,14 @@ module.exports = {
       `#!/bin/bash
       if [ -n "$(node ${actionPath}/check-version)" ]; then exit 1; fi`,
       `if ${specCommand}; then ${packageManager} run spec && ${packageManager} run build; fi`,
-      `if ${specCommand}; then ${actionPath}/api-compliance.sh ${version}; fi`,
       `git add ${assets}`,
     ],
-    "after:git:release": ["git reset --hard", "git clean -df", "git status", `${packageManager} publish`],
+    "after:git:release": [
+      `if ${process.env.CURRENT_API_KEY}; then ${actionPath}/api-compliance.sh ${version}; fi`,
+      "git reset --hard",
+      "git clean -df",
+      "git status",
+      `${packageManager} publish`,
+    ],
   },
 };
