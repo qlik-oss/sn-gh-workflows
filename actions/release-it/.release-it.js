@@ -69,7 +69,7 @@ module.exports = {
       `git add ${assets}`,
     ],
     "after:git:release": [
-      `if ${process.env.CURRENT_API_KEY}; then ${actionPath}/api-compliance.sh ${version}; fi`,
+      `${actionPath}/api-compliance.sh ${version}`,
       "git reset --hard",
       "git clean -df",
       "git status",
