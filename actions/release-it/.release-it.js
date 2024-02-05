@@ -6,11 +6,16 @@ const monorepo = process.env.monorepo;
 const specCommand = process.env.spec_command;
 const API_KEY = process.env.API_KEY;
 
+const fs = require("fs");
+const jsonString = fs.readFileSync("./package.json");
+const package = JSON.parse(jsonString);
+
 if (!packageName) {
-  const fs = require("fs");
-  const jsonString = fs.readFileSync("./package.json");
-  const package = JSON.parse(jsonString);
   packageName = package.name;
+}
+
+if (package.private === true || package.private === "true") {
+  process.exit();
 }
 const scope = packageName.split("/")[1];
 
