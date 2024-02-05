@@ -20,18 +20,16 @@ if (process.env.API_SPECIFICATION_PATH) {
 } else if (specCommand === true || specCommand === "true") {
   assets += "api-spec/spec.json";
 }
-if (monorepo) {
+
+let tagName = `v${version}`;
+if (monorepo === true || monorepo === "true") {
+  tagName = `${packageName}-${tagName}`;
   process.env.CURRENT_API_KEY = JSON.parse(API_KEY)[scope];
 } else {
   process.env.CURRENT_API_KEY = API_KEY;
 }
 
 const releaseBranches = ["main", "master", "release/**", "alpha", "beta"];
-
-let tagName = `v${version}`;
-if (monorepo === true || monorepo === "true") {
-  tagName = `${packageName}-${tagName}`;
-}
 
 module.exports = {
   plugins: {
