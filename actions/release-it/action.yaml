@@ -71,5 +71,5 @@ runs:
           pnpm config set workspace-concurrency 1
           pnpm -r exec release-it --config ${GITHUB_ACTION_PATH}/.release-it.js -V
         else
-          release-it --config ${GITHUB_ACTION_PATH}/.release-it.js
+          release-it --config ${GITHUB_ACTION_PATH}/.release-it.js -V
         fi
