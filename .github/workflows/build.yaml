@@ -128,7 +128,7 @@ jobs:
           path: "*-ext/**/*"
           retention-days: 7
   Release:
-    needs: [setup]
+    needs: [Verify, Test, BuildExt]
     runs-on: ubuntu-latest
     permissions:
       checks: write
