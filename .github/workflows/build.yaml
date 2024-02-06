@@ -30,7 +30,8 @@ on:
 jobs:
   setup:
     runs-on: ubuntu-latest
-
+    outputs:
+      packagejson: ${{ steps.package.outputs.result }}
     steps:
       - name: Setup workspace
         uses: qlik-oss/sn-gh-workflows/actions/setup@v2
@@ -63,19 +64,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ESLint
-        if: contains(fromJSON(steps.package.outputs.result), 'lint')
+        if: contains(fromJSON(needs.setup.outputs.packagejson.result), 'lint')
         run: ${{ inputs.package_manager }} run lint
 
       - name: Prettier
-        if: contains(fromJSON(steps.package.outputs.result), 'format:check')
+        if: contains(fromJSON(needs.setup.outputs.packagejson.result), 'format:check')
         run: ${{ inputs.package_manager }} run format:check
 
       - name: Typescript
-        if: contains(fromJSON(steps.package.outputs.result), 'types:check')
+        if: contains(fromJSON(needs.setup.outputs.packagejson.result), 'types:check')
         run: ${{ inputs.package_manager }} run types:check
 
       - name: API Spec
-        if: contains(fromJSON(steps.package.outputs.result), 'spec')
+        if: contains(fromJSON(needs.setup.outputs.packagejson.result), 'spec')
         run: |
           ${{ inputs.package_manager }} run spec
           # Fail if the spec command changed any files
@@ -92,7 +93,7 @@ jobs:
     steps:
       - name: Run unit tests
         uses: paambaati/codeclimate-action@v5.0.0
-        if: contains(fromJSON(steps.package.outputs.result), 'test:unit')
+        if: contains(fromJSON(needs.setup.outputs.packagejson.result), 'test:unit')
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
@@ -100,7 +101,7 @@ jobs:
           coverageCommand: ${{ inputs.package_manager }} run test:unit --ci --coverage --reporters="github-actions" --reporters="summary"
 
       - name: Run Playwright tests
-        if: contains(fromJSON(steps.package.outputs.result), 'test:e2e' )
+        if: contains(fromJSON(needs.setup.outputs.packagejson.result), 'test:e2e' )
         run: |
           npx playwright install
           ${{ inputs.package_manager }} run test:e2e
@@ -118,7 +119,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build ext
-        if: contains(fromJSON(steps.package.outputs.result), 'sense')
+        if: contains(fromJSON(needs.setup.outputs.packagejson.result), 'sense')
         run: ${{ inputs.package_manager }} run sense
 
       - name: Upload extension artifact
@@ -128,7 +129,7 @@ jobs:
           path: "*-ext/**/*"
           retention-days: 7
   Release:
-    needs: [Verify, Test, BuildExt]
+    needs: [setup, Verify, Test, BuildExt]
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -152,4 +153,4 @@ jobs:
           release_branches: ${{ inputs.release_branches }}
           monorepo: ${{ inputs.monorepo }}
           package_manager: ${{ inputs.package_manager }}
-          spec_command: ${{ contains(fromJSON(steps.package.outputs.result), 'spec') }}
+          spec_command: ${{ contains(fromJSON(needs.setup.outputs.packagejson.result), 'spec') }}
