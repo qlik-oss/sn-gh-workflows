@@ -64,19 +64,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ESLint
-        if: contains(fromJSON(needs.setup.outputs.packagejson.result), 'lint')
+        if: contains(fromJSON(needs.setup.outputs.packagejson), 'lint')
         run: ${{ inputs.package_manager }} run lint
 
       - name: Prettier
-        if: contains(fromJSON(needs.setup.outputs.packagejson.result), 'format:check')
+        if: contains(fromJSON(needs.setup.outputs.packagejson), 'format:check')
         run: ${{ inputs.package_manager }} run format:check
 
       - name: Typescript
-        if: contains(fromJSON(needs.setup.outputs.packagejson.result), 'types:check')
+        if: contains(fromJSON(needs.setup.outputs.packagejson), 'types:check')
         run: ${{ inputs.package_manager }} run types:check
 
       - name: API Spec
-        if: contains(fromJSON(needs.setup.outputs.packagejson.result), 'spec')
+        if: contains(fromJSON(needs.setup.outputs.packagejson), 'spec')
         run: |
           ${{ inputs.package_manager }} run spec
           # Fail if the spec command changed any files
@@ -93,7 +93,7 @@ jobs:
     steps:
       - name: Run unit tests
         uses: paambaati/codeclimate-action@v5.0.0
-        if: contains(fromJSON(needs.setup.outputs.packagejson.result), 'test:unit')
+        if: contains(fromJSON(needs.setup.outputs.packagejson), 'test:unit')
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
@@ -101,7 +101,7 @@ jobs:
           coverageCommand: ${{ inputs.package_manager }} run test:unit --ci --coverage --reporters="github-actions" --reporters="summary"
 
       - name: Run Playwright tests
-        if: contains(fromJSON(needs.setup.outputs.packagejson.result), 'test:e2e' )
+        if: contains(fromJSON(needs.setup.outputs.packagejson), 'test:e2e' )
         run: |
           npx playwright install
           ${{ inputs.package_manager }} run test:e2e
@@ -119,7 +119,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build ext
-        if: contains(fromJSON(needs.setup.outputs.packagejson.result), 'sense')
+        if: contains(fromJSON(needs.setup.outputs.packagejson), 'sense')
         run: ${{ inputs.package_manager }} run sense
 
       - name: Upload extension artifact
@@ -153,4 +153,4 @@ jobs:
           release_branches: ${{ inputs.release_branches }}
           monorepo: ${{ inputs.monorepo }}
           package_manager: ${{ inputs.package_manager }}
-          spec_command: ${{ contains(fromJSON(needs.setup.outputs.packagejson.result), 'spec') }}
+          spec_command: ${{ contains(fromJSON(needs.setup.outputs.packagejson), 'spec') }}
