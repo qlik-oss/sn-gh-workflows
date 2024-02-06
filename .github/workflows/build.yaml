@@ -28,12 +28,8 @@ on:
         default: false
 
 jobs:
-  build_release:
+  setup:
     runs-on: ubuntu-latest
-    permissions:
-      checks: write
-      pull-requests: write
-      contents: write
 
     steps:
       - name: Setup workspace
@@ -58,11 +54,14 @@ jobs:
               core.error("Error while reading or parsing the JSON")
               core.setFailed(err)
             }
-
       - name: Build
         if: contains(fromJSON(steps.package.outputs.result), 'build' )
         run: ${{ inputs.package_manager }} run build
 
+  Verify:
+    needs: [setup]
+    runs-on: ubuntu-latest
+    steps:
       - name: ESLint
         if: contains(fromJSON(steps.package.outputs.result), 'lint')
         run: ${{ inputs.package_manager }} run lint
@@ -87,7 +86,10 @@ jobs:
             echo "Your API specification has changed when running yarn spec. Make sure you commit your API spec changes, or remove unintended changes in the properties definition"
             exit 1
           fi
-
+  Test:
+    needs: [setup]
+    runs-on: ubuntu-latest
+    steps:
       - name: Run unit tests
         uses: paambaati/codeclimate-action@v5.0.0
         if: contains(fromJSON(steps.package.outputs.result), 'test:unit')
@@ -111,6 +113,10 @@ jobs:
           path: ./test/rendering/test-report
           if-no-files-found: ignore
 
+  BuildExt:
+    needs: [setup]
+    runs-on: ubuntu-latest
+    steps:
       - name: Build ext
         if: contains(fromJSON(steps.package.outputs.result), 'sense')
         run: ${{ inputs.package_manager }} run sense
@@ -121,7 +127,14 @@ jobs:
           name: ${{ github.event.repository.name }}-ext
           path: "*-ext/**/*"
           retention-days: 7
-
+  Release:
+    needs: [setup]
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: write
+    steps:
       - name: Release
         if: ${{ inputs.release }}
         uses: qlik-oss/sn-gh-workflows/actions/release-it@v2
