@@ -74,7 +74,7 @@ module.exports = {
       `git add ${assets}`,
     ],
     "after:git:release": [
-      `${actionPath}/api-compliance.sh ${version}`,
+      `${actionPath}/api-compliance.sh ${tagName}`,
       "git reset --hard",
       "git clean -df",
       "git status",
