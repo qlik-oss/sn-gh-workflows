@@ -28,21 +28,13 @@ on:
         default: false
 
 jobs:
-  build_release:
+  read_package:
     runs-on: ubuntu-latest
-    permissions:
-      checks: write
-      pull-requests: write
-      contents: write
-
+    outputs:
+      scripts:  ${{ steps.package.outputs.result }}
     steps:
-      - name: Setup workspace
-        uses: qlik-oss/sn-gh-workflows/actions/setup@v2
-        with:
-          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
-          NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
-          package_manager: ${{ inputs.package_manager }}
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Read package.json
         uses: actions/github-script@v7
@@ -59,38 +51,43 @@ jobs:
               core.setFailed(err)
             }
 
+
+  build_release:
+    runs-on: ubuntu-latest
+    needs: read_package
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: write
+
+    steps:
+      - name: Setup workspace
+        uses: qlik-oss/sn-gh-workflows/actions/setup@v2
+        with:
+          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
+          NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
+          package_manager: ${{ inputs.package_manager }}
+
       - name: Build
-        if: contains(fromJSON(steps.package.outputs.result), 'build' )
+        if: contains(fromJSON(needs.read_package.outputs.scripts), 'build' )
         run: ${{ inputs.package_manager }} run build
 
       - name: ESLint
-        if: contains(fromJSON(steps.package.outputs.result), 'lint')
+        if: contains(fromJSON(needs.read_package.outputs.scripts), 'lint')
         run: ${{ inputs.package_manager }} run lint
 
       - name: Prettier
-        if: contains(fromJSON(steps.package.outputs.result), 'format:check')
+        if: contains(fromJSON(needs.read_package.outputs.scripts), 'format:check')
         run: ${{ inputs.package_manager }} run format:check
 
       - name: Typescript
-        if: contains(fromJSON(steps.package.outputs.result), 'types:check')
+        if: contains(fromJSON(needs.read_package.outputs.scripts), 'types:check')
         run: ${{ inputs.package_manager }} run types:check
-
-      - name: API Spec
-        if: contains(fromJSON(steps.package.outputs.result), 'spec')
-        run: |
-          ${{ inputs.package_manager }} run spec
-          # Fail if the spec command changed any files
-          if [[ -z "$(git status --porcelain)" ]];
-          then
-            exit 0
-          else
-            echo "Your API specification has changed when running yarn spec. Make sure you commit your API spec changes, or remove unintended changes in the properties definition"
-            exit 1
-          fi
 
       - name: Run unit tests
         uses: paambaati/codeclimate-action@v5.0.0
-        if: contains(fromJSON(steps.package.outputs.result), 'test:unit')
+        if: contains(fromJSON(needs.read_package.outputs.scripts), 'test:unit')
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
@@ -98,7 +95,7 @@ jobs:
           coverageCommand: ${{ inputs.package_manager }} run test:unit --ci --coverage --reporters="github-actions" --reporters="summary"
 
       - name: Run Playwright tests
-        if: contains(fromJSON(steps.package.outputs.result), 'test:e2e' )
+        if: contains(fromJSON(needs.read_package.outputs.scripts), 'test:e2e' )
         run: |
           npx playwright install
           ${{ inputs.package_manager }} run test:e2e
@@ -112,7 +109,7 @@ jobs:
           if-no-files-found: ignore
 
       - name: Build ext
-        if: contains(fromJSON(steps.package.outputs.result), 'sense')
+        if: contains(fromJSON(needs.read_package.outputs.scripts), 'sense')
         run: ${{ inputs.package_manager }} run sense
 
       - name: Upload extension artifact
@@ -138,4 +135,25 @@ jobs:
           release_branches: ${{ inputs.release_branches }}
           monorepo: ${{ inputs.monorepo }}
           package_manager: ${{ inputs.package_manager }}
-          spec_command: ${{ contains(fromJSON(steps.package.outputs.result), 'spec') }}
+          spec_command: ${{ contains(fromJSON(needs.read_package.outputs.scripts), 'spec') }}
+
+  api_compliance:
+    runs-on: ubuntu-latest
+    needs: read_package
+    steps:
+      - name: Setup workspace
+        uses: qlik-oss/sn-gh-workflows/actions/setup@v2.1.2
+        with:
+          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
+          NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
+          package_manager: ${{ inputs.package_manager }}
+      - name: Test API Compliance
+        if: ${{ contains(fromJSON(needs.read_package.outputs.scripts), 'spec') }}
+        uses: qlik-oss/sn-gh-workflows/actions/test-api-compliance@v2.1.2
+        with:
+          API_SPECIFICATION_PATH: ${{ inputs.api_specification_path }}
+          API_KEY: ${{ secrets.API_KEY }}
+          APICULTURIST_S3: ${{ secrets.APICULTURIST_S3 }}
+          APICULTURIST_GITHUB: ${{ secrets.APICULTURIST_GITHUB }}
+          APICULTURIST_TOKEN: ${{ secrets.APICULTURIST_TOKEN }}

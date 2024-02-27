@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const fs = require("fs");
 
 const jsonString = fs.readFileSync("./package.json");
