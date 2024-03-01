@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 
 if [ -z "$CURRENT_API_KEY" ]; then
   echo "No API_KEY. Will skip compliance check"
