@@ -135,7 +135,6 @@ jobs:
           APICULTURIST_TOKEN: ${{ secrets.APICULTURIST_TOKEN }}
           GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          release: ${{ inputs.release }}
           release_branches: ${{ inputs.release_branches }}
           monorepo: ${{ inputs.monorepo }}
           package_manager: ${{ inputs.package_manager }}
