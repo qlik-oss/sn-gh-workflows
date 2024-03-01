@@ -23,10 +23,6 @@ runs:
   using: composite
 
   steps:
-    - name: API Spec
-      shell: bash
-      run: pnpm run spec
-
     - name: Install action dependencies
       shell: bash
       run: |
@@ -42,7 +38,7 @@ runs:
       shell: bash
       run: |
         pnpm config set workspace-concurrency 1
-        pnpm -r exec ${{ github.action_path }}/api-compliance.sh
+        pnpm -r exec ${{ github.action_path }}/test-api-compliance.sh
 
     - name: Test if api specification has changed
       shell: bash

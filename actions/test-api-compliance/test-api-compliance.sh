@@ -33,6 +33,10 @@ if [ -z "$key" ]; then
 fi
 echo "::endgroup::"
 
+echo "::group::Generate new spec"
+pnpm run spec
+echo "::endgroup::"
+
 echo "::group::Run api-compliance"
 docker pull ghcr.io/qlik-download/api-compliance
 docker create -v /specs --name specs alpine:3.4 "/bin/true"
