@@ -1,0 +1,15 @@
+{
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "path": ".",
+      "preset": "conventionalcommits",
+      "gitRawCommitsOpts": {
+        "path": "."
+      }
+    }
+  },
+  "npm": {
+    "publish": false,
+    "versionArgs": ["--workspaces false"]
+  }
+}

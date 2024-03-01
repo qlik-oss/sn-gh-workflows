@@ -1,0 +1,57 @@
+name: "Test API Compliance"
+description: "Test api compliance of current commit"
+author: "johan.enell@qlik.com"
+
+inputs:
+  API_SPECIFICATION_PATH:
+    description: "The path to the api specification file"
+    required: true
+  API_KEY:
+    description: "The api key"
+    required: true
+  APICULTURIST_S3:
+    description: ""
+    required: true
+  APICULTURIST_GITHUB:
+    description: ""
+    required: true
+  APICULTURIST_TOKEN:
+    description: ""
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: API Spec
+      shell: bash
+      run: pnpm run spec
+
+    - name: Install action dependencies
+      shell: bash
+      run: |
+        pnpm install --global release-it @release-it/conventional-changelog
+
+    - name: Run API Compliance
+      env:
+        API_SPECIFICATION_PATH: ${{ inputs.API_SPECIFICATION_PATH }}
+        API_KEY: ${{ inputs.API_KEY }}
+        APICULTURIST_S3: ${{ inputs.APICULTURIST_S3 }}
+        APICULTURIST_GITHUB: ${{ inputs.APICULTURIST_GITHUB }}
+        APICULTURIST_TOKEN: ${{ inputs.APICULTURIST_TOKEN }}
+      shell: bash
+      run: |
+        pnpm config set workspace-concurrency 1
+        pnpm -r exec ${{ github.action_path }}/api-compliance.sh
+
+    - name: Test if api specification has changed
+      shell: bash
+      run: |
+        # Test if api specification has changed
+        if [[ -z "$(git status --porcelain)" ]];
+        then
+          exit 0
+        else
+          echo "::error::Your API specification has changed when running yarn spec. Make sure you commit your API spec changes, or remove unintended changes in the properties definition"
+          exit 1
+        fi
