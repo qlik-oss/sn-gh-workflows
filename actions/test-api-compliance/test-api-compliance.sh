@@ -1,5 +1,4 @@
 #!/bin/bash
-
 SELF_PATH=$(readlink -f "${BASH_SOURCE[0]:-"$(command -v -- "$0")"}")
 SELF_DIR=$(dirname $SELF_PATH)
 
@@ -11,13 +10,13 @@ echo "Check compliance for $PNPM_PACKAGE_NAME"
 
 echo "::group::Calculate next version"
 tag=$(pnpm --filter "$PNPM_PACKAGE_NAME" exec release-it --config $SELF_DIR/.release-it.json --release-version)
-if [ "$?" != "0" ]; then
+release_it_result=$?
+echo "::endgroup::"
+if [ $release_it_result != 0 ]; then
   echo "::error::Failed to calculate next version"
-  echo "::endgroup::"
   exit 1
 fi
 echo "Next version is $tag"
-echo "::endgroup::"
 
 echo "::group::Find api key"
 key=$(echo "$API_KEY" | jq '."$PNPM_PACKAGE_NAME"' 2>/dev/null)
@@ -25,16 +24,16 @@ if [ "$?" != "0" ]; then
   # The API_KEY was not a json so will treat it a string instead
   key="$API_KEY"
 fi
+echo "::endgroup::"
 
 if [ -z "$key" ]; then
   echo "::warning::No API_KEY for $PNPM_PACKAGE_NAME. Will skip compliance check"
-  echo "::endgroup::"
   exit 0
 fi
-echo "::endgroup::"
 
 echo "::group::Generate new spec"
 pnpm run spec
+echo "$(jq --arg tag $tag '.info.version = $tag' $API_SPECIFICATION_PATH)" > "$API_SPECIFICATION_PATH"
 echo "::endgroup::"
 
 echo "::group::Run api-compliance"
@@ -50,4 +49,10 @@ docker run --volumes-from specs \
   -e CREDENTIALS_GITHUB="$APICULTURIST_GITHUB" \
   -e CREDENTIALS_COLONY="$APICULTURIST_TOKEN" \
   ghcr.io/qlik-download/api-compliance
+api_compliance_result=$?
 echo "::endgroup::"
+
+if [ $api_compliance_result != 0 ]; then
+  echo "::error::API failed compliance check"
+  exit 1
+fi
