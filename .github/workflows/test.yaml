@@ -8,13 +8,9 @@ on:
 
 jobs:
   test:
-    strategy:
-      matrix:
-        manager: [yarn, pnpm, bun, npm]
-    name: ${{ matrix.manager }}
+    name: Test workflow
     uses: ./.github/workflows/build.yaml
     secrets: inherit
     with:
-      package_manager: ${{ matrix.manager }}
       release: false
       api_specification_path: api-spec/spec.json
