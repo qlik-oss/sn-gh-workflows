@@ -33,6 +33,14 @@ fi
 
 echo "::group::Generate new spec"
 pnpm run spec
+
+# Test if api specification has changed
+if ((git status --porcelain));
+then
+  echo "::error::Your API specification has changed when running yarn spec. Make sure you commit your API spec changes, or remove unintended changes in the properties definition"
+  exit 1
+fi
+
 echo "$(jq --arg tag $tag '.info.version = $tag' $API_SPECIFICATION_PATH)" > "$API_SPECIFICATION_PATH"
 echo "::endgroup::"
 

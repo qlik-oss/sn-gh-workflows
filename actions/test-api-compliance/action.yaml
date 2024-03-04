@@ -39,15 +39,3 @@ runs:
       run: |
         pnpm config set workspace-concurrency 1
         pnpm -r exec ${{ github.action_path }}/test-api-compliance.sh
-
-    - name: Test if api specification has changed
-      shell: bash
-      run: |
-        # Test if api specification has changed
-        if [[ -z "$(git status --porcelain)" ]];
-        then
-          exit 0
-        else
-          echo "::error::Your API specification has changed when running yarn spec. Make sure you commit your API spec changes, or remove unintended changes in the properties definition"
-          exit 1
-        fi
