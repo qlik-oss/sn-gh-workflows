@@ -31,7 +31,7 @@ jobs:
   read_package:
     runs-on: ubuntu-latest
     outputs:
-      scripts:  ${{ steps.package.outputs.result }}
+      scripts: ${{ steps.package.outputs.result }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -50,7 +50,6 @@ jobs:
               core.error("Error while reading or parsing the JSON")
               core.setFailed(err)
             }
-
 
   build_release:
     runs-on: ubuntu-latest
@@ -157,3 +156,4 @@ jobs:
           APICULTURIST_S3: ${{ secrets.APICULTURIST_S3 }}
           APICULTURIST_GITHUB: ${{ secrets.APICULTURIST_GITHUB }}
           APICULTURIST_TOKEN: ${{ secrets.APICULTURIST_TOKEN }}
+          monorepo: ${{ inputs.monorepo }}

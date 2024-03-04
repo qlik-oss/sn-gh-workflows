@@ -18,6 +18,9 @@ inputs:
   APICULTURIST_TOKEN:
     description: ""
     required: true
+  monorepo:
+    description: ""
+    required: false
 
 runs:
   using: composite
@@ -35,6 +38,7 @@ runs:
         APICULTURIST_S3: ${{ inputs.APICULTURIST_S3 }}
         APICULTURIST_GITHUB: ${{ inputs.APICULTURIST_GITHUB }}
         APICULTURIST_TOKEN: ${{ inputs.APICULTURIST_TOKEN }}
+        monorepo: ${{ inputs.monorepo }}
       shell: bash
       run: |
         pnpm config set workspace-concurrency 1
