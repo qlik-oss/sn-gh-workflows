@@ -142,7 +142,7 @@ jobs:
     needs: read_package
     steps:
       - name: Setup workspace
-        uses: qlik-oss/sn-gh-workflows/actions/setup@v2.1.2
+        uses: qlik-oss/sn-gh-workflows/actions/setup@v2.1.3
         with:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
@@ -150,7 +150,7 @@ jobs:
           package_manager: ${{ inputs.package_manager }}
       - name: Test API Compliance
         if: ${{ contains(fromJSON(needs.read_package.outputs.scripts), 'spec') }}
-        uses: qlik-oss/sn-gh-workflows/actions/test-api-compliance@v2.1.2
+        uses: qlik-oss/sn-gh-workflows/actions/test-api-compliance@v2.1.3
         with:
           API_SPECIFICATION_PATH: ${{ inputs.api_specification_path }}
           API_KEY: ${{ secrets.API_KEY }}
