@@ -47,7 +47,9 @@ pnpm run spec || exit_on_error "::error::Failed to run the spec script in $(pwd)
 # Test if api specification has changed
 git status --porcelain || exit_on_error "::error::Your API specification has changed when running yarn spec. Make sure you commit your API spec changes, or remove unintended changes in the properties definition"
 
-echo "$(jq --arg tag $tag '.info.version = $tag' $API_SPECIFICATION_PATH)" > "$API_SPECIFICATION_PATH"
+if ! [ -z "$tag"]; then
+  echo "$(jq --arg tag $tag '.info.version = $tag' $API_SPECIFICATION_PATH)" > "$API_SPECIFICATION_PATH"
+fi
 echo "::endgroup::"
 
 echo "::group::<$PNPM_PACKAGE_NAME> - Run api-compliance"
