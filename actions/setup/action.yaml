@@ -16,6 +16,10 @@ inputs:
     description: The desired package manager to be used, [yarn, npm, pnpm, bun]
     required: true
     default: yarn
+  ref:
+    description: The ref to checkout using actions/checkout
+    required: false
+    default: ${{ github.ref }}
 
 runs:
   using: composite
@@ -24,6 +28,7 @@ runs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
+        ref: ${{ inputs.ref }}
         fetch-depth: 0
 
     - name: Setup .npmrc

@@ -35,6 +35,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          sparse-checkout: package.json
+          sparse-checkout-cone-mode: false
 
       - name: Read package.json
         uses: actions/github-script@v7
@@ -61,7 +64,7 @@ jobs:
 
     steps:
       - name: Setup workspace
-        uses: qlik-oss/sn-gh-workflows/actions/setup@v2.1.4
+        uses: qlik-oss/sn-gh-workflows/actions/setup@v2.1.6
         with:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
@@ -141,12 +144,16 @@ jobs:
     needs: read_package
     steps:
       - name: Setup workspace
-        uses: qlik-oss/sn-gh-workflows/actions/setup@v2.1.4
+        uses: qlik-oss/sn-gh-workflows/actions/setup@v2.1.6
         with:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
           NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
           package_manager: ${{ inputs.package_manager }}
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Checkout source branch
+        if: github.event.pull_request
+        run: git status
       - name: Test API Compliance
         if: ${{ contains(fromJSON(needs.read_package.outputs.scripts), 'spec') }}
         uses: qlik-oss/sn-gh-workflows/actions/test-api-compliance@v2.1.5
