@@ -123,7 +123,7 @@ jobs:
 
       - name: Release
         if: ${{ inputs.release }}
-        uses: qlik-oss/sn-gh-workflows/actions/release-it@v2.1.4
+        uses: qlik-oss/sn-gh-workflows/actions/release-it@v2.1.6
         env:
           HUSKY: 0
         with:
@@ -153,7 +153,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
       - name: Test API Compliance
         if: ${{ contains(fromJSON(needs.read_package.outputs.scripts), 'spec') }}
-        uses: qlik-oss/sn-gh-workflows/actions/test-api-compliance@v2.1.5
+        uses: qlik-oss/sn-gh-workflows/actions/test-api-compliance@v2.1.6
         with:
           API_SPECIFICATION_PATH: ${{ inputs.api_specification_path }}
           API_KEY: ${{ secrets.API_KEY }}
