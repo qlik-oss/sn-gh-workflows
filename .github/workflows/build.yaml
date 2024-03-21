@@ -53,7 +53,7 @@ jobs:
                 throw "Nebula peer dependency missing"
               }
               if(peerDeps["@nebula.js/stardust"].substr(0,1) !== ">") {
-                throw "Incorrect Nebula peer dependecy semver check"
+                throw "Incorrect Nebula peer dependecy semver check, please use the form >=X.Y.Z and not ^X.Y.Z"
               }
 
               return Object.keys(package.scripts)
