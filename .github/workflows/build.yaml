@@ -99,7 +99,7 @@ jobs:
       - name: Run Playwright tests
         if: contains(fromJSON(needs.read_package.outputs.scripts), 'test:e2e' )
         run: |
-          npx playwright install
+          npx playwright install --with-deps
           ${{ inputs.package_manager }} run test:e2e
 
       - name: Upload results Playwright tests
