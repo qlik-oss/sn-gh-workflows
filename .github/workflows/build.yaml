@@ -48,6 +48,14 @@ jobs:
               const fs = require('fs')
               const jsonString = fs.readFileSync('./package.json')
               var package = JSON.parse(jsonString)
+              var peerDeps = package.peerDependencies;
+              if(!peerDeps["@nebula.js/stardust"]) {
+                throw "Nebula peer dependency missing"
+              }
+              if(peerDeps["@nebula.js/stardust"].substr(0,1) !== ">") {
+                throw "Incorrect Nebula peer dependecy semver check, please use the form >=X.Y.Z and not ^X.Y.Z"
+              }
+
               return Object.keys(package.scripts)
             } catch(err) {
               core.error("Error while reading or parsing the JSON")
