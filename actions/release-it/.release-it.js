@@ -67,7 +67,6 @@ module.exports = {
   hooks: {
     "before:git:release": [
       "git clean -df",
-      `if ${monorepo}; then mvm-update && git add mvm.lock || echo "Did not update mvm.lock"; fi`,
       `#!/bin/bash
       if [ -n "$(node ${actionPath}/check-version)" ]; then exit 1; fi`,
       `if ${specCommand}; then ${packageManager} run spec && ${packageManager} run build; fi`,
