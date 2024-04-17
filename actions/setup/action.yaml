@@ -57,7 +57,7 @@ runs:
       if: inputs.package_manager == 'pnpm'
       uses: pnpm/action-setup@v2
       with:
-        version: latest
+        version: 8
 
     - name: Setup bun
       if: inputs.package_manager == 'bun'
