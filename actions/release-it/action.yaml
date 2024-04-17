@@ -51,7 +51,7 @@ runs:
         branch_name=$(git rev-parse --abbrev-ref HEAD)
         echo "branch_name=$branch_name" >> $GITHUB_ENV
         echo "action_path=${GITHUB_ACTION_PATH}" >> $GITHUB_ENV
-        ${{ inputs.package_manager }} install --global @release-it/conventional-changelog@7.0.2 release-it@16.2.1 @b12k/mvm@0.0.10
+        ${{ inputs.package_manager }} install --global @release-it/conventional-changelog@8.0.1 release-it@17.2.0
     - name: Release it
       env:
         GITHUB_TOKEN: ${{ inputs.GH_TOKEN }}
