@@ -28,7 +28,7 @@ runs:
         if [ "$scripts" != "null"  ]; then
           echo 'scripts=$scripts' >> "$GITHUB_OUTPUT"
         else
-          echo "::error::Error while reading or parsing the JSON. Couldn't find a script section"
+          echo "::error::Couldn't find a script section in package.json"
         fi
 
     - name: Verify stardust
