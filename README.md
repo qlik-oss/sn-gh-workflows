@@ -32,7 +32,6 @@ jobs:
       release: ${{ inputs.release || false}}
       api_specification_path: path-to-spec-file
       monorepo: true # Only when setting up a monorepository
-      package_manager: pnpm # pnpm is the default since v2
 ```
 
 This will trigger a build for pull requests to main, every new commit on main and manually by the user.
