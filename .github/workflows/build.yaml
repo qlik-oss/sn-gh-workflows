@@ -29,6 +29,12 @@ jobs:
     outputs:
       scripts: ${{ steps.package.outputs.scripts }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: "**/package.json"
+          sparse-checkout-cone-mode: false
+
       - name: Scan package.json
         id: package
         uses: qlik-oss/sn-gh-workflows/actions/scan-packages@v3.0.0
