@@ -23,117 +23,132 @@ on:
         type: boolean
         default: false
 
+
 jobs:
-  read_package:
+  info:
     runs-on: ubuntu-latest
-    outputs:
-      scripts: ${{ steps.package.outputs.scripts }}
     steps:
-      - name: Scan package.json
-        id: package
-        uses: qlik-oss/sn-gh-workflows/actions/scan-packages@v3.0.0
+      - run: echo "::warning::Workflow has moved. Please update your build script to use qlik-oss/sn-gh-workflows/workflows/build.yaml instead"
 
-  build_release:
-    runs-on: ubuntu-latest
-    needs: read_package
-    permissions:
-      checks: write
-      pull-requests: write
-      contents: write
+  build:
+    uses: qlik-oss/sn-gh-workflows/workflows/build.yaml@move_workflow
+    secrets: inherit
+    with:
+      release: ${{ inputs.release }}
+      release_branches: ${{ inputs.release_branches }}
+      api_specification_path: ${{ inputs.api_specification_path }}
+      monorepo: ${{ inputs.monorepo }}
+# jobs:
+#   read_package:
+#     runs-on: ubuntu-latest
+#     outputs:
+#       scripts: ${{ steps.package.outputs.scripts }}
+#     steps:
+#       - name: Scan package.json
+#         id: package
+#         uses: qlik-oss/sn-gh-workflows/actions/scan-packages@v3.0.0
 
-    steps:
-      - name: Setup workspace
-        uses: qlik-oss/sn-gh-workflows/actions/setup@v3.0.0
-        with:
-          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
-          NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
+#   build_release:
+#     runs-on: ubuntu-latest
+#     needs: read_package
+#     permissions:
+#       checks: write
+#       pull-requests: write
+#       contents: write
 
-      - name: Build
-        if: contains(fromJSON(needs.read_package.outputs.scripts), 'build' )
-        run: pnpm run build
+#     steps:
+#       - name: Setup workspace
+#         uses: qlik-oss/sn-gh-workflows/actions/setup@v3.0.0
+#         with:
+#           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+#           NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
+#           NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
 
-      - name: ESLint
-        if: contains(fromJSON(needs.read_package.outputs.scripts), 'lint')
-        run: pnpm run lint
+#       - name: Build
+#         if: contains(fromJSON(needs.read_package.outputs.scripts), 'build' )
+#         run: pnpm run build
 
-      - name: Prettier
-        if: contains(fromJSON(needs.read_package.outputs.scripts), 'format:check')
-        run: pnpm run format:check
+#       - name: ESLint
+#         if: contains(fromJSON(needs.read_package.outputs.scripts), 'lint')
+#         run: pnpm run lint
 
-      - name: Typescript
-        if: contains(fromJSON(needs.read_package.outputs.scripts), 'types:check')
-        run: pnpm run types:check
+#       - name: Prettier
+#         if: contains(fromJSON(needs.read_package.outputs.scripts), 'format:check')
+#         run: pnpm run format:check
 
-      - name: Run unit tests
-        uses: paambaati/codeclimate-action@v5.0.0
-        if: contains(fromJSON(needs.read_package.outputs.scripts), 'test:unit')
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-        with:
-          coverageLocations: ${{github.workspace}}/coverage/lcov.info:lcov
-          coverageCommand: pnpm run test:unit --ci --coverage --reporters="github-actions" --reporters="summary"
+#       - name: Typescript
+#         if: contains(fromJSON(needs.read_package.outputs.scripts), 'types:check')
+#         run: pnpm run types:check
 
-      - name: Run Playwright tests
-        if: contains(fromJSON(needs.read_package.outputs.scripts), 'test:e2e' )
-        run: |
-          npx playwright install --with-deps
-          pnpm run test:e2e
+#       - name: Run unit tests
+#         uses: paambaati/codeclimate-action@v5.0.0
+#         if: contains(fromJSON(needs.read_package.outputs.scripts), 'test:unit')
+#         env:
+#           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+#         with:
+#           coverageLocations: ${{github.workspace}}/coverage/lcov.info:lcov
+#           coverageCommand: pnpm run test:unit --ci --coverage --reporters="github-actions" --reporters="summary"
 
-      - name: Upload results Playwright tests
-        if: success() || failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: ./test/rendering/test-report
-          if-no-files-found: ignore
+#       - name: Run Playwright tests
+#         if: contains(fromJSON(needs.read_package.outputs.scripts), 'test:e2e' )
+#         run: |
+#           npx playwright install --with-deps
+#           pnpm run test:e2e
 
-      - name: Build ext
-        if: contains(fromJSON(needs.read_package.outputs.scripts), 'sense')
-        run: pnpm run sense
+#       - name: Upload results Playwright tests
+#         if: success() || failure()
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: playwright-report
+#           path: ./test/rendering/test-report
+#           if-no-files-found: ignore
 
-      - name: Upload extension artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ github.event.repository.name }}-ext
-          path: "*-ext/**/*"
-          retention-days: 7
+#       - name: Build ext
+#         if: contains(fromJSON(needs.read_package.outputs.scripts), 'sense')
+#         run: pnpm run sense
 
-      - name: Release
-        if: ${{ inputs.release }}
-        uses: qlik-oss/sn-gh-workflows/actions/release-it@v3.0.0
-        env:
-          HUSKY: 0
-        with:
-          API_SPECIFICATION_PATH: ${{ inputs.api_specification_path }}
-          API_KEY: ${{ secrets.API_KEY }}
-          APICULTURIST_S3: ${{ secrets.APICULTURIST_S3 }}
-          APICULTURIST_GITHUB: ${{ secrets.APICULTURIST_GITHUB }}
-          APICULTURIST_TOKEN: ${{ secrets.APICULTURIST_TOKEN }}
-          GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          release_branches: ${{ inputs.release_branches }}
-          monorepo: ${{ inputs.monorepo }}
-          spec_command: ${{ contains(fromJSON(needs.read_package.outputs.scripts), 'spec') }}
+#       - name: Upload extension artifact
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: ${{ github.event.repository.name }}-ext
+#           path: "*-ext/**/*"
+#           retention-days: 7
 
-  api_compliance:
-    runs-on: ubuntu-latest
-    needs: read_package
-    steps:
-      - name: Setup workspace
-        uses: qlik-oss/sn-gh-workflows/actions/setup@v3.0.0
-        with:
-          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
-          NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
-          ref: ${{ github.event.pull_request.head.ref }}
-      - name: Test API Compliance
-        if: ${{ contains(fromJSON(needs.read_package.outputs.scripts), 'spec') }}
-        uses: qlik-oss/sn-gh-workflows/actions/test-api-compliance@v2.1.6
-        with:
-          API_SPECIFICATION_PATH: ${{ inputs.api_specification_path }}
-          API_KEY: ${{ secrets.API_KEY }}
-          APICULTURIST_S3: ${{ secrets.APICULTURIST_S3 }}
-          APICULTURIST_GITHUB: ${{ secrets.APICULTURIST_GITHUB }}
-          APICULTURIST_TOKEN: ${{ secrets.APICULTURIST_TOKEN }}
-          monorepo: ${{ inputs.monorepo }}
+#       - name: Release
+#         if: ${{ inputs.release }}
+#         uses: qlik-oss/sn-gh-workflows/actions/release-it@v3.0.0
+#         env:
+#           HUSKY: 0
+#         with:
+#           API_SPECIFICATION_PATH: ${{ inputs.api_specification_path }}
+#           API_KEY: ${{ secrets.API_KEY }}
+#           APICULTURIST_S3: ${{ secrets.APICULTURIST_S3 }}
+#           APICULTURIST_GITHUB: ${{ secrets.APICULTURIST_GITHUB }}
+#           APICULTURIST_TOKEN: ${{ secrets.APICULTURIST_TOKEN }}
+#           GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+#           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+#           release_branches: ${{ inputs.release_branches }}
+#           monorepo: ${{ inputs.monorepo }}
+#           spec_command: ${{ contains(fromJSON(needs.read_package.outputs.scripts), 'spec') }}
+
+#   api_compliance:
+#     runs-on: ubuntu-latest
+#     needs: read_package
+#     steps:
+#       - name: Setup workspace
+#         uses: qlik-oss/sn-gh-workflows/actions/setup@v3.0.0
+#         with:
+#           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+#           NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
+#           NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
+#           ref: ${{ github.event.pull_request.head.ref }}
+#       - name: Test API Compliance
+#         if: ${{ contains(fromJSON(needs.read_package.outputs.scripts), 'spec') }}
+#         uses: qlik-oss/sn-gh-workflows/actions/test-api-compliance@v2.1.6
+#         with:
+#           API_SPECIFICATION_PATH: ${{ inputs.api_specification_path }}
+#           API_KEY: ${{ secrets.API_KEY }}
+#           APICULTURIST_S3: ${{ secrets.APICULTURIST_S3 }}
+#           APICULTURIST_GITHUB: ${{ secrets.APICULTURIST_GITHUB }}
+#           APICULTURIST_TOKEN: ${{ secrets.APICULTURIST_TOKEN }}
+#           monorepo: ${{ inputs.monorepo }}
