@@ -1,0 +1,36 @@
+name: "Scan package.json"
+description: "Scans the package.json files in the repo"
+author: "johan.enell@qlik.com"
+
+outputs:
+  scripts:
+    description: "The scripts available in the root package.json"
+    value: ${{ steps.package.outputs.scripts }}
+
+runs:
+  using: composite
+
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        sparse-checkout: "**/package.json"
+        sparse-checkout-cone-mode: false
+
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v3
+
+    - name: Read package.json
+      shell: bash
+      id: package
+      run: |
+        scripts=$(cat package.json| jq -rc '.scripts')
+        if [ "$scripts" != "null"  ]; then
+          echo 'scripts=$scripts' >> "$GITHUB_OUTPUT"
+        else
+          echo "::error::Error while reading or parsing the JSON. Couldn't find a script section"
+        fi
+
+    - name: Verify stardust
+      shell: bash
+      run: pnpm -r exec ${{ github.action_path }}/checkPeerDeps.sh

@@ -27,36 +27,11 @@ jobs:
   read_package:
     runs-on: ubuntu-latest
     outputs:
-      scripts: ${{ steps.package.outputs.result }}
+      scripts: ${{ steps.package.outputs.scripts }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          sparse-checkout: package.json
-          sparse-checkout-cone-mode: false
-
-      - name: Read package.json
-        uses: actions/github-script@v7
+      - name: Scan package.json
         id: package
-        with:
-          script: |
-            try {
-              const fs = require('fs')
-              const jsonString = fs.readFileSync('./package.json')
-              var package = JSON.parse(jsonString)
-              var peerDeps = package.peerDependencies;
-              if(!peerDeps["@nebula.js/stardust"]) {
-                throw "Nebula peer dependency missing"
-              }
-              if(peerDeps["@nebula.js/stardust"].substr(0,1) !== ">") {
-                throw "Incorrect Nebula peer dependecy semver check, please use the form >=X.Y.Z and not ^X.Y.Z"
-              }
-
-              return Object.keys(package.scripts)
-            } catch(err) {
-              core.error("Error while reading or parsing the JSON")
-              core.setFailed(err)
-            }
+        uses: qlik-oss/sn-gh-workflows/actions/scan-packages@v3.0.0
 
   build_release:
     runs-on: ubuntu-latest
