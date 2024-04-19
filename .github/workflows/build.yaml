@@ -18,10 +18,6 @@ on:
       api_specification_path:
         required: false
         type: string
-      package_manager:
-        required: false
-        type: string
-        default: pnpm
       monorepo:
         required: false
         type: boolean
@@ -72,28 +68,27 @@ jobs:
 
     steps:
       - name: Setup workspace
-        uses: qlik-oss/sn-gh-workflows/actions/setup@v2.1.6
+        uses: qlik-oss/sn-gh-workflows/actions/setup@v3.0.0
         with:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
           NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
-          package_manager: ${{ inputs.package_manager }}
 
       - name: Build
         if: contains(fromJSON(needs.read_package.outputs.scripts), 'build' )
-        run: ${{ inputs.package_manager }} run build
+        run: pnpm run build
 
       - name: ESLint
         if: contains(fromJSON(needs.read_package.outputs.scripts), 'lint')
-        run: ${{ inputs.package_manager }} run lint
+        run: pnpm run lint
 
       - name: Prettier
         if: contains(fromJSON(needs.read_package.outputs.scripts), 'format:check')
-        run: ${{ inputs.package_manager }} run format:check
+        run: pnpm run format:check
 
       - name: Typescript
         if: contains(fromJSON(needs.read_package.outputs.scripts), 'types:check')
-        run: ${{ inputs.package_manager }} run types:check
+        run: pnpm run types:check
 
       - name: Run unit tests
         uses: paambaati/codeclimate-action@v5.0.0
@@ -102,13 +97,13 @@ jobs:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
           coverageLocations: ${{github.workspace}}/coverage/lcov.info:lcov
-          coverageCommand: ${{ inputs.package_manager }} run test:unit --ci --coverage --reporters="github-actions" --reporters="summary"
+          coverageCommand: pnpm run test:unit --ci --coverage --reporters="github-actions" --reporters="summary"
 
       - name: Run Playwright tests
         if: contains(fromJSON(needs.read_package.outputs.scripts), 'test:e2e' )
         run: |
           npx playwright install --with-deps
-          ${{ inputs.package_manager }} run test:e2e
+          pnpm run test:e2e
 
       - name: Upload results Playwright tests
         if: success() || failure()
@@ -120,7 +115,7 @@ jobs:
 
       - name: Build ext
         if: contains(fromJSON(needs.read_package.outputs.scripts), 'sense')
-        run: ${{ inputs.package_manager }} run sense
+        run: pnpm run sense
 
       - name: Upload extension artifact
         uses: actions/upload-artifact@v4
@@ -131,7 +126,7 @@ jobs:
 
       - name: Release
         if: ${{ inputs.release }}
-        uses: qlik-oss/sn-gh-workflows/actions/release-it@v2.1.6
+        uses: qlik-oss/sn-gh-workflows/actions/release-it@v3.0.0
         env:
           HUSKY: 0
         with:
@@ -144,7 +139,6 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           release_branches: ${{ inputs.release_branches }}
           monorepo: ${{ inputs.monorepo }}
-          package_manager: ${{ inputs.package_manager }}
           spec_command: ${{ contains(fromJSON(needs.read_package.outputs.scripts), 'spec') }}
 
   api_compliance:
@@ -152,12 +146,11 @@ jobs:
     needs: read_package
     steps:
       - name: Setup workspace
-        uses: qlik-oss/sn-gh-workflows/actions/setup@v2.1.6
+        uses: qlik-oss/sn-gh-workflows/actions/setup@v3.0.0
         with:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
           NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
-          package_manager: ${{ inputs.package_manager }}
           ref: ${{ github.event.pull_request.head.ref }}
       - name: Test API Compliance
         if: ${{ contains(fromJSON(needs.read_package.outputs.scripts), 'spec') }}

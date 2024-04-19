@@ -1,6 +1,5 @@
 const version = "${version}";
 let packageName = process.env.PNPM_PACKAGE_NAME;
-const packageManager = process.env.package_manager;
 const actionPath = process.env.action_path;
 const monorepo = process.env.monorepo;
 const specCommand = process.env.spec_command;
@@ -69,7 +68,7 @@ module.exports = {
       "git clean -df",
       `#!/bin/bash
       if [ -n "$(node ${actionPath}/check-version)" ]; then exit 1; fi`,
-      `if ${specCommand}; then ${packageManager} run spec && ${packageManager} run build; fi`,
+      `if ${specCommand}; then pnpm run spec && pnpm run build; fi`,
       `git add ${assets}`,
     ],
     "after:git:release": [
@@ -77,7 +76,7 @@ module.exports = {
       "git reset --hard",
       "git clean -df",
       "git status",
-      `${packageManager} publish`,
+      "pnpm publish",
     ],
   },
 };
