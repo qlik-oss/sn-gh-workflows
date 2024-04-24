@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/bash
 
 echo "Scanning $(cat package.json | jq -r '.name') in folder $(pwd)"
 

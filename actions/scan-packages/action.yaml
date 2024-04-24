@@ -11,12 +11,6 @@ runs:
   using: composite
 
   steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        sparse-checkout: "**/package.json"
-        sparse-checkout-cone-mode: false
-
     - name: Setup pnpm
       uses: pnpm/action-setup@v3
 
@@ -24,9 +18,9 @@ runs:
       shell: bash
       id: package
       run: |
-        scripts=$(cat package.json| jq -rc '.scripts')
+        scripts=$(cat package.json| jq -rc '.scripts | keys')
         if [ "$scripts" != "null"  ]; then
-          echo 'scripts=$scripts' >> "$GITHUB_OUTPUT"
+          echo "scripts=$scripts" >> "$GITHUB_OUTPUT"
         else
           echo "::error::Couldn't find a script section in package.json"
         fi

@@ -7,10 +7,29 @@ on:
   pull_request:
 
 jobs:
-  test:
+  test-workflow:
     name: Test workflow
     uses: ./.github/workflows/build.yaml
     secrets: inherit
     with:
       release: false
       api_specification_path: api-spec/spec.json
+
+  test-scan-packages:
+    name: Test scan packages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./actions/scan-packages
+        id: scan
+      
+      - run: echo '${{ steps.scan.outputs.scripts }}'
+
+      - name: Test if script contains build
+        run: |
+          if ${{ contains(fromJSON(steps.scan.outputs.scripts), 'build' ) }}; then
+            exit 0
+          fi
+          echo "::error::Couldn't find script build when scanning package.json"
+          exit 1
