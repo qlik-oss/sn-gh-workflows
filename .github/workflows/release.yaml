@@ -1,0 +1,12 @@
+name: Test workflow
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: npx --package=@release-it/conventional-changelog --package=@j-ulrich/release-it-regex-bumper release-it
