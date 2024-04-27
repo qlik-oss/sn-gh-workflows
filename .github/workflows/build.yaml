@@ -37,7 +37,7 @@ jobs:
 
     steps:
       - name: Setup workspace
-        uses: qlik-oss/sn-gh-workflows/actions/setup@v2
+        uses: qlik-oss/sn-gh-workflows/actions/setup@v3
         with:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
@@ -124,7 +124,7 @@ jobs:
 
       - name: Release
         if: ${{ inputs.release }}
-        uses: qlik-oss/sn-gh-workflows/actions/release-it@v2
+        uses: qlik-oss/sn-gh-workflows/actions/release-it@v3
         env:
           HUSKY: 0
         with:
