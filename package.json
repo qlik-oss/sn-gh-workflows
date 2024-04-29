@@ -60,7 +60,7 @@
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
-    "@nebula.js/stardust": "^4.0.0"
+    "@nebula.js/stardust": "^4.0.0 || ^5.0.0"
   },
   "engines": {
     "node": ">=18.10.0"
