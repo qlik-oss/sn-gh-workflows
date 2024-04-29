@@ -1281,15 +1281,15 @@
     fs-extra "11.2.0"
     inquirer "8.2.6"
 
-"@nebula.js/cli-sense@4.14.0":
-  version "4.14.0"
-  resolved "https://registry.npmjs.org/@nebula.js/cli-sense/-/cli-sense-4.14.0.tgz"
-  integrity sha512-GgMB9JRA+Yrg8D+dT1fkSVdODeiOQkJQUwbv7OgYjiprEevKo+yQMcHyGnT9N3B0c09Uyri2qTXKsvOWj50Vcg==
+"@nebula.js/cli-sense@5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@nebula.js/cli-sense/-/cli-sense-5.0.1.tgz#e0b931195b387e58e68783c851dc23dd66604f1a"
+  integrity sha512-9RgBRu5sbhElZjXMyY1ulKiKiBeK+3ZP9V58QsS+wygZEmAR6dgbcxw1JEBWKm/Yn2L4vBuX3yQDZVlQvtAtzw==
   dependencies:
-    "@babel/cli" "7.23.9"
-    "@babel/core" "7.24.0"
-    "@babel/preset-env" "7.24.0"
-    "@nebula.js/stardust" "^4.14.0"
+    "@babel/cli" "7.24.1"
+    "@babel/core" "7.24.4"
+    "@babel/preset-env" "7.24.4"
+    "@nebula.js/stardust" "^5.0.1"
     "@rollup/plugin-babel" "6.0.4"
     "@rollup/plugin-commonjs" "25.0.7"
     "@rollup/plugin-node-resolve" "15.2.3"
@@ -1298,7 +1298,7 @@
     extend "3.0.2"
     fs-extra "11.2.0"
     node-event-emitter "0.0.1"
-    rollup "4.13.0"
+    rollup "4.14.2"
     yargs "17.7.2"
 
 "@nebula.js/cli-serve@5.0.1":
@@ -1334,12 +1334,10 @@
     import-cwd "3.0.0"
     yargs "17.7.2"
 
-"@nebula.js/stardust@^4.14.0":
-  version "4.14.0"
-  resolved "https://registry.npmjs.org/@nebula.js/stardust/-/stardust-4.14.0.tgz"
-  integrity sha512-OrO95DS2QxWOUaZbWSNMzzMtBCwi65Y+G4SWPJ5hNH4MAAhIPbaQN8NT142RpcKSLCzctqEBwLiG16NxHZFkrw==
-  dependencies:
-    "@types/qlik-engineapi" "12.67.16"
+"@nebula.js/stardust@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@nebula.js/stardust/-/stardust-5.0.1.tgz#d66ab361e59a254209f0693b4d92fbdda4351085"
+  integrity sha512-u0ItsO5Fk12RcbqeQICG9K8WdQV9nRfuagkrxtEWb5BRO+E9/VtaqvcpPvk+/1KOF6QJGCjI9sSmP0yDbcFPtQ==
 
 "@nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents.3":
   version "2.1.8-no-fsevents.3"
@@ -1770,11 +1768,6 @@
   version "20.8.2"
   resolved "https://registry.npmjs.org/@types/node/-/node-20.8.2.tgz"
   integrity sha512-Vvycsc9FQdwhxE3y3DzeIxuEJbWGDsnrxvMADzTDF/lcdR9/K+AQIeAghTQsHtotg/q0j3WEOYS/jQgSdWue3w==
-
-"@types/qlik-engineapi@12.67.16":
-  version "12.67.16"
-  resolved "https://registry.npmjs.org/@types/qlik-engineapi/-/qlik-engineapi-12.67.16.tgz"
-  integrity sha512-NiwMX6zrV162lRcupTdrgoT2YtKZy97zJ70rRGLdJTWcaMOWUgAhM1ufzhmp3ir1KlNArI4Ds8ojfxA80SpwKQ==
 
 "@types/qs@*":
   version "6.9.8"
