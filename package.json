@@ -48,7 +48,7 @@
     "@nebula.js/cli": "5.0.1",
     "@nebula.js/cli-build": "4.14.0",
     "@nebula.js/cli-sense": "4.14.0",
-    "@nebula.js/cli-serve": "4.14.0",
+    "@nebula.js/cli-serve": "5.0.1",
     "@playwright/test": "^1.28.1",
     "@qlik/eslint-config": "^0.7.0",
     "@qlik/prettier-config": "^0.4.1",
