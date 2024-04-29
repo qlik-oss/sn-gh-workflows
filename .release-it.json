@@ -1,0 +1,44 @@
+{
+  "npm": {
+    "publish": false,
+    "ignoreVersion": true
+  },
+  "git": {
+    "commitMessage": "chore: release v${version}",
+    "requireBranch": ["main", "release/*", "jnl/*"]
+  },
+  "github": {
+    "release": true,
+    "comments": {
+      "submit": true
+    }
+  },
+  "hooks": {
+    "after:git:release": "VERSION=${version} ./scripts/moveMajorVersionTag.sh"
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "preset": {
+        "name": "angular"
+      },
+      "infile": "CHANGELOG.md"
+    },
+    "@j-ulrich/release-it-regex-bumper": {
+      "out": [
+        {
+          "file": ".github/workflows/build.yaml",
+          "search": "qlik-oss\\/sn-gh-workflows\\/actions\\/(.+)@v\\d+\\.\\d+\\.\\d+",
+          "replace": "qlik-oss/sn-gh-workflows/actions/$1@v{{version}}"
+        },
+        {
+          "file": "README.md",
+          "search": "qlik-oss/sn-gh-workflows/.github/workflows/build.yaml@v\\d+",
+          "replace": "qlik-oss/sn-gh-workflows/.github/workflows/build.yaml@v{{major}}"
+        }
+      ],
+      "search": {
+        "flags": "g"
+      }
+    }
+  }
+}
