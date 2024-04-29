@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - name: Setup workspace
-        uses: qlik-oss/sn-gh-workflows/actions/setup@v2
+        uses: qlik-oss/sn-gh-workflows/actions/setup@v3
 
       - name: Build
         run: yarn build
