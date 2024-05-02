@@ -29,6 +29,7 @@ runs:
         fi
         matrix=$(pnpm m ls --json --depth=-1 | jq '[.[].name]')
         if [ "$matrix" != "null" ]; then
+          echo "$matrix"
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
         else
           echo "::error::Failure to setup matrix"
