@@ -2,11 +2,6 @@ name: "Upload-build-artifacts"
 description: "Upload build artifacts"
 author: "niek.vanstaveren@qlik.com"
 
-inputs:
-  MATRIX:
-    description: "Matrix to run dev builds"
-    required: true
-
 runs:
   using: composite
 

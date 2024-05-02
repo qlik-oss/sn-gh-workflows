@@ -1,6 +1,8 @@
 #!/bin/bash
 # set -x
 
+echo "Uploading files in folder $(pwd)"
+
 systemjs=$(cat package.json | jq -r '.systemjs')
 
 echo "PWD"
