@@ -38,7 +38,7 @@ jobs:
 
       - name: Scan package.json
         id: package
-        uses: qlik-oss/sn-gh-workflows/actions/scan-packages@v3.0.1
+        uses: qlik-oss/sn-gh-workflows/actions/scan-packages@dvr/upload-devbuilds
 
   build_release:
     runs-on: ubuntu-latest
