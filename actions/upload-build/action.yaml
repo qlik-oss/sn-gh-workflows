@@ -15,4 +15,5 @@ runs:
       strategy:
         matrix:
           repo: ${{ inputs.matrix }}
+      shell: bash
       run: echo "hello"
