@@ -71,6 +71,11 @@ jobs:
         if: contains(fromJSON(needs.read_package.outputs.scripts), 'types:check')
         run: pnpm run types:check
 
+      - name: Dev Build
+        uses: qlik-oss/sn-gh-workflows/actions/upload-build@dvr/upload-devbuilds
+        with:
+          MATRIX: ${{ needs.read_packages.outpus.matrix }}
+
       - name: Run unit tests
         uses: paambaati/codeclimate-action@v5.0.0
         if: contains(fromJSON(needs.read_package.outputs.scripts), 'test:unit')
