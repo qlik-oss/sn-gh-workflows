@@ -16,4 +16,4 @@ runs:
       run: pnpm -r build:dev
     - name: Upload builds
       shell: bash
-      run: pnpm -r ${{ github.action_path }}/uploadBuild.sh
+      run: pnpm -r exec ${{ github.action_path }}/uploadBuild.sh
