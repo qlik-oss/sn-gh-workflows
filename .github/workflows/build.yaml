@@ -155,4 +155,4 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
           NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
       - name: Upload dev builds
-        uses: qlik-oss/sn-gh-workflow/actions/upload-build@dvr/upload-devbuilds
+        uses: qlik-oss/sn-gh-workflows/actions/upload-build@dvr/upload-devbuilds
