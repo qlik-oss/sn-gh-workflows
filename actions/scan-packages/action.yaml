@@ -27,7 +27,7 @@ runs:
         else
           echo "::error::Couldn't find a script section in package.json"
         fi
-        matrix=pnpm m ls --json --depth=-1 | jq '[.[].name]'
+        matrix=$(pnpm m ls --json --depth=-1 | jq '[.[].name]')
         if [ "$matrix" != "null" ]; then
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
         else
