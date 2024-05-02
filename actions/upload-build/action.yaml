@@ -11,9 +11,8 @@ runs:
   using: composite
 
   steps:
-    - name: Check matrix
-      strategy:
-        matrix:
-          repo: ${{ inputs.matrix }}
+    - name: Dev builds
+      run: pnpm -r build:dev
+    - name: Upload builds
       shell: bash
-      run: echo "hello"
+      run: pnpm -r ${{ github.action_path }}/uploadBuild.sh

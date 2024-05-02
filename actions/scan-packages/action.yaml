@@ -6,9 +6,6 @@ outputs:
   scripts:
     description: "The scripts available in the root package.json"
     value: ${{ steps.package.outputs.scripts }}
-  matrix:
-    description: "The matrix to run jobs on"
-    value: ${{ steps.package.outputs.matrix }}
 
 runs:
   using: composite
@@ -26,13 +23,6 @@ runs:
           echo "scripts=$scripts" >> "$GITHUB_OUTPUT"
         else
           echo "::error::Couldn't find a script section in package.json"
-        fi
-        matrix=$(pnpm m ls --json --depth=-1 | jq '[.[].name]')
-        if [ "$matrix" != "null" ]; then
-          echo "$matrix"
-          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
-        else
-          echo "::error::Failure to setup matrix"
         fi
     - name: Verify stardust
       shell: bash
