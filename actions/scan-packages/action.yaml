@@ -6,9 +6,12 @@ outputs:
   scripts:
     description: "The scripts available in the root package.json"
     value: ${{ steps.package.outputs.scripts }}
-  matrix:
-    description: "Matrix for dev builds"
-    value: ${{ steps.matrix.outputs.matrix }}
+  repoNames:
+    description: "Array of repos for dev builds"
+    value: ${{ steps.matrix.outputs.repoNames }}
+  repoFolders:
+    description: "Array of folders for dev builds"
+    value: ${{ steps.matrix.outputs.repoFolders }}
 
 runs:
   using: composite
@@ -35,14 +38,17 @@ runs:
       id: matrix
       run: |
         repos=$(pnpm -r exec pwd)
-        matrix="["
+        repoNames="["
+        repoFolders="["
 
         for item in $repos; do
           cd $item
           name=$(cat package.json | jq -r '.name')
           systemjs=$(cat package.json | jq -r '.systemjs')
           if [[ "$systemjs" != "null" && "$name" == @nebula* ]]; then
-            matrix+="'$name',"
+            repoNames+="'$name',"
+            repoFolders+="'$item',"
           fi
         done
-        echo "matrix=${matrix%?}]" >> "$GITHUB_OUTPUT"
+        echo "repoNames=${repoNames%?}]" >> "$GITHUB_OUTPUT"
+        echo "repoFolders=${repoFolders%?}]" >> "$GITHUB_OUTPUT"

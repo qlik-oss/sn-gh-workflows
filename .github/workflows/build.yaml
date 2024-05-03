@@ -28,7 +28,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       scripts: ${{ steps.package.outputs.scripts }}
-      matrix: ${{ steps.package.outputs.matrix }}
+      repoNames: ${{ steps.package.outputs.repoNames }}
+      repoFolders: ${{ steps.package.outputs.repoFolders }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -152,7 +153,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        repos: ${{fromJSON(needs.read_package.outputs.matrix)}}
+        repos: ${{fromJSON(needs.read_package.outputs.repoNames)}}
     steps:
       - name: Setup workspace
         uses: qlik-oss/sn-gh-workflows/actions/setup@v3.0.1
@@ -160,6 +161,16 @@ jobs:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
           NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
-      - name: check
-        shell: bash
-        run: echo "Hello"
+      - name: Dev build
+        run: pnpm -r --filter ${{ matrix.repos }} build:dev
+      - name: Upload dev build
+        uses: qlik-trial/qmfe-workflows/actions/qmfe-to-aws@v1
+        with:
+          aws-access-key-id: ${{ secrets.QMFE_DEV_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.QMFE_DEV_ACCESS_KEY }}
+          qmfe-id: ${{ matrix.repos }}
+          source: ${{fromJSON(need.read_package.outputs.repoFolders)[strategy.job-index]}}
+          version: "test"
+          allow-overwrite: true
+          include-sourcemaps: true
+          dry-run: true
