@@ -174,7 +174,6 @@ jobs:
           version: ${{ github.event.number }}
           allow-overwrite: true
           include-sourcemaps: true
-          dry-run: true
           aws-bucket-name: "hub-devbuilds"
           s3-key: "nebula"
       - name: Create comment

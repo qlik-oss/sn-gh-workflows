@@ -35,7 +35,7 @@ runs:
         COMMENT="1. Open Browser DevTools (F12)"$'\n'
         COMMENT+="2. Go to Console tab"$'\n'
         COMMENT+="3. Copy & Paste:"$'\n'
-        COMMENT+="- localStorage.setItem('import-map-override:@$PACKAGE', 'https://d19uocc72ax6zk.cloudfront.net/$NAMESPACE/$PACKAGE/$VERSION/$FILE')"$'\n'
+        COMMENT+="- localStorage.setItem('import-map-override:$PACKAGE', 'https://d19uocc72ax6zk.cloudfront.net/$NAMESPACE/$PACKAGE/$VERSION/$FILE')"$'\n'
         COMMENT+="4. Refresh the page (F5)"$'\n'
         COMMENT+="5. ☕️"$'\n'
 
