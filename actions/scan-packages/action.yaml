@@ -6,6 +6,9 @@ outputs:
   scripts:
     description: "The scripts available in the root package.json"
     value: ${{ steps.package.outputs.scripts }}
+  matrix:
+    description: "Matrix for dev builds"
+    value: ${{ stepps.matrix.outputs.matrix }}
 
 runs:
   using: composite
@@ -27,3 +30,19 @@ runs:
     - name: Verify stardust
       shell: bash
       run: pnpm -r --workspace-concurrency=1 exec ${{ github.action_path }}/checkPeerDeps.sh
+    - name: Get repo matrix
+      shell: bash
+      id: matrix
+      run: |
+        repos=$(pnpm -r exec pwd)
+        matrix="["
+
+        for item in $repos; do
+          cd $item
+          name=$(cat package.json | jq -r '.name')
+          systemjs=$(cat package.json | jq -r '.systemjs')
+          if [[ "$systemjs" != "null" && "$name" == @nebula* ]]; then
+            matrix+="'$name',"
+          fi
+        done
+        echo "matrix=${matrix%?}]" >> "$GITHUB_OUTPUT"

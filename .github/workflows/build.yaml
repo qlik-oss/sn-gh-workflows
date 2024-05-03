@@ -28,6 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       scripts: ${{ steps.package.outputs.scripts }}
+      matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -147,6 +148,11 @@ jobs:
   dev_build:
     runs-on: ubuntu-latest
     needs: read_package
+    name: ${{ matrix.repos }}
+    strategy:
+      fail-fast: false
+      matrix:
+        repos: ${{ needs.read_package.outputs.matrix }}
     steps:
       - name: Setup workspace
         uses: qlik-oss/sn-gh-workflows/actions/setup@v3.0.1
@@ -154,5 +160,6 @@ jobs:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
           NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
-      - name: Upload dev builds
-        uses: qlik-oss/sn-gh-workflows/actions/upload-build@dvr/upload-devbuilds
+      - name: check
+        shell: bash
+        run: echo "Hello"
