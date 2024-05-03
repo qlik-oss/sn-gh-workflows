@@ -169,7 +169,7 @@ jobs:
           aws-access-key-id: ${{ secrets.QMFE_DEV_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.QMFE_DEV_ACCESS_KEY }}
           qmfe-id: ${{ matrix.repos }}
-          source: ${{fromJSON(needs.read_package.outputs.repoFolders)[strategy.job-index]}}
+          source: ${{fromJSON(needs.read_package.outputs.repoFolders)[strategy.job-index]}}/dist
           version: "test"
           allow-overwrite: true
           include-sourcemaps: true
