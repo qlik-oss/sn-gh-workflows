@@ -30,6 +30,7 @@ jobs:
       scripts: ${{ steps.package.outputs.scripts }}
       repoNames: ${{ steps.package.outputs.repoNames }}
       repoFolders: ${{ steps.package.outputs.repoFolders }}
+      systemJSFiles: ${{ steps.package.outputs.systemJSFiles }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -161,9 +162,6 @@ jobs:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
           NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
-      - name: Get version
-        id: version
-        uses: qlik-trial/qlik-releaser/.github/actions/version@master
       - name: Dev build
         run: pnpm -r --filter ${{ matrix.repos }} build:dev
       - name: Upload dev build
@@ -173,9 +171,23 @@ jobs:
           aws-secret-access-key: ${{ secrets.QMFE_DEV_ACCESS_KEY }}
           qmfe-id: ${{ matrix.repos }}
           source: ${{fromJSON(needs.read_package.outputs.repoFolders)[strategy.job-index]}}/dist
-          version: ${{ steps.version.outputs.version }}
+          version: ${{ github.event.number }}
           allow-overwrite: true
           include-sourcemaps: true
           dry-run: true
           aws-bucket-name: "hub-devbuilds"
           s3-key: "nebula"
+      - name: Create comment
+        id: comment
+        uses: qlik-oss/sn-gh-workflows/actions/get-devbuild-comment@dvr/upload-devbuilds
+        with:
+          package: ${{ matrix.repos }}
+          namespace: "nebula"
+          version: ${{ github.event.number }}
+          file: ${{fromJSON(needs.read_package.outputs.systemJSFiles)[strategy.job-index]}}
+      - name: Comment the PR
+        if: github.event_name == 'pull_request'
+        uses: actions-ecosystem/action-create-comment@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          body: ${{ steps.comment.outputs.comment }}

@@ -1,0 +1,49 @@
+name: "Get devbuild comment"
+description: "Gets a comment with description for how to use overrides for devbuilds"
+author: "niek.vanstaveren@qlik.com"
+
+inputs:
+  package:
+    description: "package name"
+    required: true
+  namespace:
+    description: "qmfe namespace"
+    required: true
+  version:
+    description: "qmfe component version"
+    required: true
+  file:
+    description: "Systemjs file to overwrite"
+    required: true
+
+outputs:
+  comment:
+    description: "comment with instructions for how to use devbuild overrides"
+    value: ${{ steps.comment.outputs.comment }}
+
+runs:
+  using: composite
+  steps:
+    - name: Get qmfe overrides
+      id: comment
+      env:
+        PACKAGE: ${{ inputs.package }}
+        NAMESPACE: ${{ inputs.namespace }}
+        VERSION: ${{ inputs.version }}
+        FILE: ${{ inputs.file }}
+      run: |
+        COMMENT="1. Open Browser DevTools (F12)"$'\n'
+        COMMENT+="2. Go to Console tab"$'\n'
+        COMMENT+="3. Copy & Paste:"$'\n'
+        COMMENT+="- localStorage.setItem('import-map-override:@$PACKAGE', 'https://d19uocc72ax6zk.cloudfront.net/$NAMESPACE/$PACKAGE/$VERSION/$FILE')"$'\n'
+        COMMENT+="4. Refresh the page (F5)"$'\n'
+        COMMENT+="5. ☕️"$'\n'
+
+        # Set the output for the GitHub Actions step using the 'EOF' syntax
+        {
+          echo "comment<<EOF"
+          echo -e "$COMMENT"
+          echo "EOF"
+        } >>"$GITHUB_OUTPUT"
+
+      shell: bash

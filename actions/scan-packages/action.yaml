@@ -12,6 +12,9 @@ outputs:
   repoFolders:
     description: "Array of folders for dev builds"
     value: ${{ steps.matrix.outputs.repoFolders }}
+  systemJSFiles:
+    description: "Array of systemjs files"
+    value: ${{ steps.matrix.outputs.systemJSFiles }}
 
 runs:
   using: composite
@@ -40,6 +43,7 @@ runs:
         repos=$(pnpm -r exec pwd)
         repoNames="["
         repoFolders="["
+        systemJSFiles="["
 
         for item in $repos; do
           cd $item
@@ -48,7 +52,9 @@ runs:
           if [[ "$systemjs" != "null" && "$name" == @nebula* ]]; then
             repoNames+="'$name',"
             repoFolders+="'$item',"
+            systemJSFiles+="'${systemjs#dist/}',"
           fi
         done
         echo "repoNames=${repoNames%?}]" >> "$GITHUB_OUTPUT"
         echo "repoFolders=${repoFolders%?}]" >> "$GITHUB_OUTPUT"
+        echo "systemJSFiles=${systemJSFiles%?}]" >> "$GITHUB_OUTPUT"
