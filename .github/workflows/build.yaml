@@ -161,6 +161,9 @@ jobs:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
           NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
+      - name: Get version
+        id: version
+        uses: qlik-trial/qlik-releaser/.github/actions/version@master
       - name: Dev build
         run: pnpm -r --filter ${{ matrix.repos }} build:dev
       - name: Upload dev build
@@ -170,8 +173,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.QMFE_DEV_ACCESS_KEY }}
           qmfe-id: ${{ matrix.repos }}
           source: ${{fromJSON(needs.read_package.outputs.repoFolders)[strategy.job-index]}}/dist
-          version: "test"
+          version: ${{ steps.version.outputs.version }}
           allow-overwrite: true
           include-sourcemaps: true
           dry-run: true
           aws-bucket-name: "hub-devbuilds"
+          s3-key: "nebula"
