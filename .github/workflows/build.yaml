@@ -152,7 +152,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        repos: ${{ needs.read_package.outputs.matrix }}
+        repos: ${{fromJSON(needs.read_package.outputs.matrix)}}
     steps:
       - name: Setup workspace
         uses: qlik-oss/sn-gh-workflows/actions/setup@v3.0.1
