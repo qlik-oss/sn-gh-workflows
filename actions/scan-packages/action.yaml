@@ -8,7 +8,7 @@ outputs:
     value: ${{ steps.package.outputs.scripts }}
   matrix:
     description: "Matrix for dev builds"
-    value: ${{ stepps.matrix.outputs.matrix }}
+    value: ${{ steps.matrix.outputs.matrix }}
 
 runs:
   using: composite
