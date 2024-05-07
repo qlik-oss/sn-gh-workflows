@@ -12,4 +12,7 @@ jobs:
       - name: release-it
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx --package=@release-it/conventional-changelog --package=@j-ulrich/release-it-regex-bumper release-it
+        run: |
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          npx --package=@release-it/conventional-changelog --package=@j-ulrich/release-it-regex-bumper release-it
