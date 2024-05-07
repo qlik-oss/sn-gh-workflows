@@ -1,4 +1,4 @@
-name: Test workflow
+name: Release workflow
 on:
   workflow_dispatch:
 
@@ -9,4 +9,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - run: npx --package=@release-it/conventional-changelog --package=@j-ulrich/release-it-regex-bumper release-it
+      - name: release-it
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx --package=@release-it/conventional-changelog --package=@j-ulrich/release-it-regex-bumper release-it
