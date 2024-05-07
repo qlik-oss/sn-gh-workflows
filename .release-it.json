@@ -5,7 +5,8 @@
   },
   "git": {
     "commitMessage": "chore: release v${version}",
-    "requireBranch": ["main", "release/*", "jnl/*"]
+    "requireBranch": ["main", "release/*", "jnl/*"],
+    "tagMatch": "v[0-9]*.[0-9]*.[0-9]*"
   },
   "github": {
     "release": true,
