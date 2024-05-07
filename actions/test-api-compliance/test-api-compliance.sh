@@ -37,6 +37,11 @@ tag=$(pnpm --filter "$PNPM_PACKAGE_NAME" exec release-it --config $SELF_DIR/../r
 release_it_result=$?
 echo "Next version is $tag"
 echo "::endgroup::"
+if [[ $tag == "There are no commits since the latest tag"* ]]; then
+  echo "::info::Skipping compliance check because there are no commits for $PNPM_PACKAGE_NAME since the latest tag"
+  exit 0
+fi
+
 if [ $release_it_result != 0 ]; then
   exit_on_error "::error::Failed to calculate next version"
 fi
