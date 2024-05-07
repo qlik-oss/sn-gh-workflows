@@ -16,7 +16,7 @@ jobs:
       - name: Get major version num and update tag
         run: |
           VERSION=${GITHUB_REF#refs/tags/}
-          MAJOR=v${VERSION%%.*}
+          MAJOR=${VERSION%%.*}
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
           git tag -fa ${MAJOR} -m "Update major version tag"
