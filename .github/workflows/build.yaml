@@ -89,7 +89,7 @@ jobs:
           fi
 
       - name: Run unit tests
-        uses: paambaati/codeclimate-action@v5.0.0
+        uses: paambaati/codeclimate-action@v6.0.0
         if: contains(fromJSON(steps.package.outputs.result), 'test:unit')
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
