@@ -18,8 +18,3 @@ jobs:
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
           npx --package=@release-it/conventional-changelog --package=@j-ulrich/release-it-regex-bumper release-it
-
-          VERSION=${GITHUB_REF#refs/tags/}
-          MAJOR=v${VERSION%%.*}
-          git tag -fa ${MAJOR} -m "Update major version tag"
-          git push origin ${MAJOR} --force
