@@ -55,10 +55,6 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
           NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
 
-      - name: Build
-        if: contains(fromJSON(needs.read_package.outputs.scripts), 'build' )
-        run: pnpm run build
-
       - name: ESLint
         if: contains(fromJSON(needs.read_package.outputs.scripts), 'lint')
         run: pnpm run lint
@@ -79,6 +75,10 @@ jobs:
         with:
           coverageLocations: ${{github.workspace}}/coverage/lcov.info:lcov
           coverageCommand: pnpm run test:unit --ci --coverage --reporters="github-actions" --reporters="summary"
+
+      - name: Build
+        if: contains(fromJSON(needs.read_package.outputs.scripts), 'build' )
+        run: pnpm run build
 
       - name: Run Playwright tests
         if: contains(fromJSON(needs.read_package.outputs.scripts), 'test:e2e' )
