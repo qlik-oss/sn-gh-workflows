@@ -1,5 +1,12 @@
 
 
+# [3.1.0](https://github.com/qlik-oss/sn-gh-workflows/compare/v3.0.4...v3.1.0) (2024-05-08)
+
+
+### Features
+
+* moved build to later in the pipeline ([#87](https://github.com/qlik-oss/sn-gh-workflows/issues/87)) ([5993283](https://github.com/qlik-oss/sn-gh-workflows/commit/59932839c3df2bd8c6d14b8e1f9b929934785525))
+
 ## [3.0.4](https://github.com/qlik-oss/sn-gh-workflows/compare/v3.0.3...v3.0.4) (2024-05-07)
 
 ## [3.0.3](https://github.com/qlik-oss/sn-gh-workflows/compare/v3.0.2...v3.0.3) (2024-05-07)
