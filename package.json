@@ -53,7 +53,7 @@
     "@qlik/eslint-config": "^0.7.0",
     "@qlik/prettier-config": "^0.4.1",
     "@qlik/sdk": "^0.25.0",
-    "eslint": "8.57.0",
+    "eslint": "9.2.0",
     "picasso-plugin-q": "2.2.7",
     "picasso.js": "2.2.7",
     "prettier": "^3.0.3",
