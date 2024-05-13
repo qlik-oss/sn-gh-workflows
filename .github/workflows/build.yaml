@@ -186,7 +186,9 @@ jobs:
           file: ${{fromJSON(needs.read_package.outputs.systemJSFiles)[strategy.job-index]}}
       - name: Comment the PR
         if: github.event_name == 'pull_request'
-        uses: actions-ecosystem/action-create-comment@v1
+        uses: peter-evans/create-or-update-comment@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           body: ${{ steps.comment.outputs.comment }}
+          edit-mode: replace
+          comment-id: ${{ matrix.repos }}
+          reactions: rocket
