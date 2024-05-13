@@ -51,6 +51,4 @@ runs:
           matrixEntries+="$JSON_STRING,"
         done
 
-        strategy="{ \"fail-fast\": false, \"matrix\": {\"include\": [${matrixEntries%?}] }}"
-        echo $strategy
-        echo "strategy=$strategy" >> "$GITHUB_OUTPUT"
+        echo "strategy=[${matrixEntries%?}]" >> "$GITHUB_OUTPUT"
