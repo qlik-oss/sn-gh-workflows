@@ -31,8 +31,11 @@ runs:
         NAMESPACE: ${{ inputs.namespace }}
         VERSION: ${{ inputs.version }}
         FILE: ${{ inputs.file }}
+        COMMIT: ${{ }}
       run: |
-        COMMENT="1. Open Browser DevTools (F12)"$'\n'
+        COMMENT="Created a dev build for commit ${{ github.sha }}\n\n"
+        COMMENT+="To use the devbuild follow these steps:\n"
+        COMMENT+="1. Open Browser DevTools (F12)"$'\n'
         COMMENT+="2. Go to Console tab"$'\n'
         COMMENT+="3. Copy & Paste:"$'\n'
         COMMENT+="- localStorage.setItem('import-map-override:$PACKAGE', 'https://d19uocc72ax6zk.cloudfront.net/$NAMESPACE/$PACKAGE/$VERSION/$FILE')"$'\n'
