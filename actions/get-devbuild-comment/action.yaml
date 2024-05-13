@@ -31,7 +31,7 @@ runs:
         NAMESPACE: ${{ inputs.namespace }}
         VERSION: ${{ inputs.version }}
         FILE: ${{ inputs.file }}
-        COMMIT: ${{ github.sha }}
+        COMMIT: ${{ github.event.pull_request.head.sha }}
       run: |
         COMMENT="Created a dev build for commit $COMMIT\n\n"
         COMMENT+="To use the devbuild follow these steps:\n"
