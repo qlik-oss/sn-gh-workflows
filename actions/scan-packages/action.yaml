@@ -6,15 +6,9 @@ outputs:
   scripts:
     description: "The scripts available in the root package.json"
     value: ${{ steps.package.outputs.scripts }}
-  repoNames:
-    description: "Array of repos for dev builds"
-    value: ${{ steps.matrix.outputs.repoNames }}
-  repoFolders:
-    description: "Array of folders for dev builds"
-    value: ${{ steps.matrix.outputs.repoFolders }}
-  systemJSFiles:
-    description: "Array of systemjs files"
-    value: ${{ steps.matrix.outputs.systemJSFiles }}
+  strategy:
+    description: "Strategy for running actions"
+    value: ${{ steps.strategy.outputs.strategy }}
 
 runs:
   using: composite
@@ -38,23 +32,24 @@ runs:
       run: pnpm -r --workspace-concurrency=1 exec ${{ github.action_path }}/checkPeerDeps.sh
     - name: Get repo matrix
       shell: bash
-      id: matrix
+      id: strategy
       run: |
         repos=$(pnpm -r exec pwd)
-        repoNames="["
-        repoFolders="["
-        systemJSFiles="["
+        matrixEntries=""
 
         for item in $repos; do
           cd $item
           name=$(cat package.json | jq -r '.name')
           systemjs=$(cat package.json | jq -r '.systemjs')
-          if [[ "$systemjs" != "null" && "$name" == @nebula* ]]; then
-            repoNames+="'$name',"
-            repoFolders+="'$item',"
-            systemJSFiles+="'${systemjs#dist/}',"
-          fi
+          JSON_STRING=$(
+            jq -n \
+              --arg package $name \
+              --arg folder $item \
+              --arg systemjs ${systemjs#dist/} \
+              '$ARGS.named'
+          )
+          matrixEntries+="$JSON_STRING,"
         done
-        echo "repoNames=${repoNames%?}]" >> "$GITHUB_OUTPUT"
-        echo "repoFolders=${repoFolders%?}]" >> "$GITHUB_OUTPUT"
-        echo "systemJSFiles=${systemJSFiles%?}]" >> "$GITHUB_OUTPUT"
+
+        strategy="{ \"fail-fast\": false, \"matrix\": {\"include\": [${matrixEntries%?}] }}"
+        echo "strategy=$strategy" >> "$GITHUB_OUTPUT"
