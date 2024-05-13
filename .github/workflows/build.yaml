@@ -191,4 +191,5 @@ jobs:
           body: ${{ steps.comment.outputs.comment }}
           edit-mode: replace
           comment-id: ${{ matrix.repos }}
+          issue-number: ${{ github.event.pull_request.number }}
           reactions: rocket
