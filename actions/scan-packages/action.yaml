@@ -41,14 +41,16 @@ runs:
           cd $item
           name=$(cat package.json | jq -r '.name')
           systemjs=$(cat package.json | jq -r '.systemjs')
-          JSON_STRING=$(
-            jq -n \
-              --arg package $name \
-              --arg folder $item \
-              --arg systemjs ${systemjs#dist/} \
-              '$ARGS.named'
-          )
-          matrixEntries+="$JSON_STRING,"
+          if [ "$name" != "null" ]; then
+            JSON_STRING=$(
+              jq -n \
+                --arg package $name \
+                --arg folder $item \
+                --arg systemjs ${systemjs#dist/} \
+                '$ARGS.named'
+            )
+            matrixEntries+="$JSON_STRING,"
+          fi
         done
 
         strategy="{ \"fail-fast\": false, \"matrix\": {\"include\": [${matrixEntries%?}] }}"
