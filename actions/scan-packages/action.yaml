@@ -42,7 +42,7 @@ runs:
           name=$(cat package.json | jq -r '.name')
           systemjs=$(cat package.json | jq -r '.systemjs')
           private=$(cat package.json | jq -r '.private')
-          if [ "$name" != "null" ] && [ "$private" != false ]; then
+          if [ "$name" != "null" ] && [ "$private" != "true" ]; then
             JSON_STRING=$(
               jq -n \
                 --arg package $name \
