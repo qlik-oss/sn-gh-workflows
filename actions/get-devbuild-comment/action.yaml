@@ -33,7 +33,7 @@ runs:
         FILE: ${{ inputs.file }}
         COMMIT: ${{ github.event.pull_request.head.sha }}
       run: |
-        COMMENT="Created a dev build for commit $COMMIT\n\n"
+        COMMENT="Created a $PACKAGE dev build for commit $COMMIT\n\n"
         COMMENT+="To use the devbuild follow these steps:\n"
         COMMENT+="1. Open Browser DevTools (F12)"$'\n'
         COMMENT+="2. Go to Console tab"$'\n'
