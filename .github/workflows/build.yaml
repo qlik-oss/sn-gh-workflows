@@ -150,6 +150,8 @@ jobs:
     needs: read_package
     name: ${{ matrix.package }}
     strategy: ${{fromJSON(needs.read_package.outputs.strategy)}}
+      exclude: 
+        - systemjs: "null"
     steps:
       - name: Setup workspace
         uses: qlik-oss/sn-gh-workflows/actions/setup@v3.0.1
@@ -179,12 +181,18 @@ jobs:
           namespace: "nebula"
           version: ${{ github.event.number }}
           file: ${{ matrix.systemjs }}
+      - name: Find comment
+        uses: peter-evans/find-comment@v3
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Created a ${{ matrix.package }} dev build
       - name: Comment the PR
         if: github.event_name == 'pull_request'
         uses: peter-evans/create-or-update-comment@v4
         with:
           body: ${{ steps.comment.outputs.comment }}
           edit-mode: replace
-          comment-id: ${{ matrix.package }}
+          comment-id: ${{ steps.fc.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
           reactions: rocket
