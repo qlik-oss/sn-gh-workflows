@@ -1,5 +1,12 @@
 
 
+## [3.1.1](https://github.com/qlik-oss/sn-gh-workflows/compare/v3.1.0...v3.1.1) (2024-05-14)
+
+
+### Bug Fixes
+
+* use correct github token on checkout ([#94](https://github.com/qlik-oss/sn-gh-workflows/issues/94)) ([2a69abf](https://github.com/qlik-oss/sn-gh-workflows/commit/2a69abff7df7d3d9f875f61cf2c1dd8a5f99fb48))
+
 # [3.1.0](https://github.com/qlik-oss/sn-gh-workflows/compare/v3.0.4...v3.1.0) (2024-05-08)
 
 
