@@ -41,6 +41,7 @@ runs:
         NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
         NPMRC_ENCODED: ${{ inputs.QLIK_NPM_DEV_ENCODED }}
     - name: Dev build
+      shell: bash
       run: pnpm -r --filter ${{ inputs.package }} build:dev
     - name: Upload dev build
       uses: qlik-trial/qmfe-workflows/actions/qmfe-to-aws@v1
