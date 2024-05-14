@@ -165,7 +165,7 @@ jobs:
           aws-access-key-id: ${{ secrets.QMFE_DEV_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.QMFE_DEV_ACCESS_KEY }}
           qmfe-id: ${{ matrix.package }}
-          source: ${{fromJSON(needs.read_package.outputs.repoFolders)[strategy.job-index]}}/dist
+          source: ${{ matrix.folder }}/dist
           version: ${{ github.event.number }}
           allow-overwrite: true
           include-sourcemaps: true
@@ -178,7 +178,7 @@ jobs:
           package: ${{ matrix.package }}
           namespace: "nebula"
           version: ${{ github.event.number }}
-          file: ${{fromJSON(needs.read_package.outputs.systemJSFiles)[strategy.job-index]}}
+          file: ${{ matrix.systemjs }}
       - name: Comment the PR
         if: github.event_name == 'pull_request'
         uses: peter-evans/create-or-update-comment@v4
