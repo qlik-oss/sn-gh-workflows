@@ -37,7 +37,7 @@ jobs:
 
       - name: Test if strategy is correct
         run: |
-          if ${{ contains(fromJSON(steps.scan.outputs.strategy), 'fail-fast' ß) }}; then
+          if ${{ contains(fromJSON(steps.scan.outputs.strategy), 'fail-fast' ) }}; then
             exit 0
           fi
           echo "::error::Strategy is not as expected"
