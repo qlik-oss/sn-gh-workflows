@@ -23,8 +23,9 @@ jobs:
 
       - uses: ./actions/scan-packages
         id: scan
-      
+
       - run: echo '${{ steps.scan.outputs.scripts }}'
+      - run: echo '${{ steps.scan.outputs.strategy }}'
 
       - name: Test if script contains build
         run: |
