@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       scripts: ${{ steps.package.outputs.scripts }}
-      matrix: ${{ steps.package.outputs.matrix }}
+      strategy: ${{ steps.package.outputs.strategy }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
