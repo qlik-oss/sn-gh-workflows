@@ -150,8 +150,6 @@ jobs:
     needs: read_package
     name: ${{ matrix.package }}
     strategy: ${{fromJSON(needs.read_package.outputs.strategy)}}
-      exclude: 
-        - systemjs: "null"
     steps:
       - name: Setup workspace
         uses: qlik-oss/sn-gh-workflows/actions/setup@v3.0.1
