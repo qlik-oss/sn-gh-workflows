@@ -12,6 +12,24 @@ inputs:
   systemjs:
     description: "Systemjs file name"
     required: true
+  GH_ACCESS_TOKEN:
+    description: "Token for accessing private repos"
+    required: false
+  NPM_TOKEN:
+    description: "Token for accessing npm registry"
+    required: false
+  NPMRC_ENCODED:
+    description: "BASE64 encoded .npmrc file"
+    required: false
+  ref:
+    description: The ref to checkout using actions/checkout
+    required: false
+    default: ${{ github.ref }}
+  QMFE_DEV_ACCESS_KEY_ID:
+    description: Access id for aws upload
+    required: true
+  QMFE_DEV_ACCESS_KEY:
+    description: Access key for aws upload
 
 runs:
   using: composite
@@ -19,16 +37,16 @@ runs:
     - name: Setup workspace
       uses: qlik-oss/sn-gh-workflows/actions/setup@v3.0.1
       with:
-        GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
-        NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
+        GH_ACCESS_TOKEN: ${{ inputs.GH_ACCESS_TOKEN }}
+        NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
+        NPMRC_ENCODED: ${{ inputs.QLIK_NPM_DEV_ENCODED }}
     - name: Dev build
       run: pnpm -r --filter ${{ inputs.package }} build:dev
     - name: Upload dev build
       uses: qlik-trial/qmfe-workflows/actions/qmfe-to-aws@v1
       with:
-        aws-access-key-id: ${{ secrets.QMFE_DEV_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.QMFE_DEV_ACCESS_KEY }}
+        aws-access-key-id: ${{ inputs.QMFE_DEV_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ inputs.QMFE_DEV_ACCESS_KEY }}
         qmfe-id: ${{ inputs.package }}
         source: ${{ inputs.folder }}/dist
         version: ${{ github.event.number }}

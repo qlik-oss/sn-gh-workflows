@@ -158,3 +158,8 @@ jobs:
           package: ${{ matrix.package }}
           folder: ${{ matrix.folder }}
           systemjs: ${{ matrix.systemjs }}
+          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
+          NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
+          QMFE_DEV_ACCESS_KEY_ID: ${{ secrets.QMFE_DEV_ACCESS_KEY_ID }}
+          QMFE_DEV_ACCESS_KEY: ${{ secrets.QMFE_DEV_ACCESS_KEY }}
