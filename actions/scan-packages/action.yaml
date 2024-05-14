@@ -41,7 +41,8 @@ runs:
           cd $item
           name=$(cat package.json | jq -r '.name')
           systemjs=$(cat package.json | jq -r '.systemjs')
-          if [ "$name" != "null" ]; then
+          private=$(cat package.json | jq -r '.private')
+          if [ "$name" != "null" && "$private" != "false" ]; then
             JSON_STRING=$(
               jq -n \
                 --arg package $name \
