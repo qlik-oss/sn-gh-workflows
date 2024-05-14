@@ -34,3 +34,11 @@ jobs:
           fi
           echo "::error::Couldn't find script build when scanning package.json"
           exit 1
+
+      - name: Test if strategy is correct
+        run: |
+          if ${{ steps.scan.outputs.strategy == "{ "fail-fast": false, "matrix": {"include": [{ "package": "sn-test", "folder": "/home/runner/work/sn-gh-workflows/sn-gh-workflows", "systemjs": "null" }] }}" }}; then
+            exit 0
+          fi
+          echo "::error::Strategy is not as expected"
+          exit 1
