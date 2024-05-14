@@ -26,6 +26,7 @@ runs:
       with:
         ref: ${{ inputs.ref }}
         fetch-depth: 0
+        token: ${{ inputs.GH_ACCESS_TOKEN }}
 
     - name: Setup .npmrc
       if: inputs.NPMRC_ENCODED != null
