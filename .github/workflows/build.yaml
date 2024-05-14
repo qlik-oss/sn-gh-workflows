@@ -50,15 +50,11 @@ jobs:
 
     steps:
       - name: Setup workspace
-        uses: qlik-oss/sn-gh-workflows/actions/setup@v3.0.1
+        uses: qlik-oss/sn-gh-workflows/actions/setup@v3.1.0
         with:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
           NPMRC_ENCODED: ${{ secrets.QLIK_NPM_DEV_ENCODED }}
-
-      - name: Build
-        if: contains(fromJSON(needs.read_package.outputs.scripts), 'build' )
-        run: pnpm run build
 
       - name: ESLint
         if: contains(fromJSON(needs.read_package.outputs.scripts), 'lint')
@@ -73,13 +69,17 @@ jobs:
         run: pnpm run types:check
 
       - name: Run unit tests
-        uses: paambaati/codeclimate-action@v5.0.0
+        uses: paambaati/codeclimate-action@v6.0.0
         if: contains(fromJSON(needs.read_package.outputs.scripts), 'test:unit')
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
           coverageLocations: ${{github.workspace}}/coverage/lcov.info:lcov
           coverageCommand: pnpm run test:unit --ci --coverage --reporters="github-actions" --reporters="summary"
+
+      - name: Build
+        if: contains(fromJSON(needs.read_package.outputs.scripts), 'build' )
+        run: pnpm run build
 
       - name: Run Playwright tests
         if: contains(fromJSON(needs.read_package.outputs.scripts), 'test:e2e' )
@@ -108,7 +108,7 @@ jobs:
 
       - name: Release
         if: ${{ inputs.release }}
-        uses: qlik-oss/sn-gh-workflows/actions/release-it@v3.0.1
+        uses: qlik-oss/sn-gh-workflows/actions/release-it@v3.1.0
         env:
           HUSKY: 0
         with:
@@ -128,7 +128,7 @@ jobs:
     needs: read_package
     steps:
       - name: Setup workspace
-        uses: qlik-oss/sn-gh-workflows/actions/setup@v3.0.1
+        uses: qlik-oss/sn-gh-workflows/actions/setup@v3.1.0
         with:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NPM_CI_TOKEN }}
@@ -136,7 +136,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
       - name: Test API Compliance
         if: ${{ contains(fromJSON(needs.read_package.outputs.scripts), 'spec') }}
-        uses: qlik-oss/sn-gh-workflows/actions/test-api-compliance@v3.0.1
+        uses: qlik-oss/sn-gh-workflows/actions/test-api-compliance@v3.1.0
         with:
           API_SPECIFICATION_PATH: ${{ inputs.api_specification_path }}
           API_KEY: ${{ secrets.API_KEY }}

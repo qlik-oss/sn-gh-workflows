@@ -26,7 +26,7 @@ on:
 
 jobs:
   build:
-    uses: qlik-oss/sn-gh-workflows/.github/workflows/build.yaml@v2
+    uses: qlik-oss/sn-gh-workflows/.github/workflows/build.yaml@v3
     secrets: inherit
     with:
       release: ${{ inputs.release || false}}

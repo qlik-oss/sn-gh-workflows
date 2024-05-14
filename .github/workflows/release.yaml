@@ -1,4 +1,4 @@
-name: Test workflow
+name: Release workflow
 on:
   workflow_dispatch:
 
@@ -8,5 +8,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
           fetch-depth: 0
-      - run: npx --package=@release-it/conventional-changelog --package=@j-ulrich/release-it-regex-bumper release-it
+      - name: release-it
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+        run: |
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+
+          npx --package=@release-it/conventional-changelog --package=@j-ulrich/release-it-regex-bumper release-it
