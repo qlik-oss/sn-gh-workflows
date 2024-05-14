@@ -151,7 +151,7 @@ jobs:
     name: ${{ matrix.package }}
     strategy: ${{fromJSON(needs.read_package.outputs.strategy)}}
     steps:
-      - if: ${{ matrix.systemjs != 'null' }}
+      - if: ${{ matrix.systemjs != 'null' }} && ${{ contains(GITHUB_REPOSITORY, 'qlik-trial') }}
         name: Upload dev build
         uses: qlik-oss/sn-gh-workflows/actions/dev-build@dvr/upload-devbuilds
         with:
